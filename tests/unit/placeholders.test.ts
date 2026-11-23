@@ -50,6 +50,11 @@ describe("npm run placeholders", () => {
     assert.ok(list.some((item) => item.kind === "data" && /stars:/.test(item.what)));
   });
 
+  test("lists the install commands and the download links, which nobody has run yet", () => {
+    assert.ok(list.some((item) => item.what.startsWith("curl -fsSL https://get.openbreach.dev/install.sh")));
+    assert.ok(list.some((item) => item.kind === "data" && /label: Windows x64/.test(item.what)));
+  });
+
   test("says so when no placeholder is left", () => {
     const none = listPlaceholders(
       [{ page: "Front page (/)", file: "x.ts", name: "x", data: { heading: { text: "Final" } } }],

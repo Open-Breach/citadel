@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { projectPage, ui } from "@/content/site";
 import type { Project, ProjectPage } from "@/content/types";
 import { CopyButton } from "./copy-button";
+import { Text } from "@/components/ui/text";
 
 /**
  * How to install the project, for each platform it runs on. A command is
@@ -21,6 +22,13 @@ export function Install({ project, page }: { project: Project; page: ProjectPage
           {projectPage.installHeading.text}
         </SectionHeading>
 
+        {page.installNote ? (
+          // Said before the commands, where everyone who installs reads it.
+          <p className="border-stone/60 text-basalt rounded-control mt-8 max-w-[44rem] border bg-white/70 px-5 py-4 leading-relaxed">
+            <Text>{page.installNote.text}</Text>
+          </p>
+        ) : null}
+
         <div className="border-stone/40 mt-10 border-b">
           {page.install.map((instructions) => (
             <div
@@ -33,13 +41,15 @@ export function Install({ project, page }: { project: Project; page: ProjectPage
                   {instructions.platform}
                 </h3>
                 {instructions.note ? (
-                  <p className="text-ocean mt-1.5 text-[0.9375rem]">{instructions.note.text}</p>
+                  <p className="text-ocean mt-1.5 text-control">{instructions.note.text}</p>
                 ) : null}
               </div>
-              <ol className="min-w-0 space-y-8 lg:col-span-8">
+              <ul className="min-w-0 space-y-8 lg:col-span-8">
                 {instructions.steps.map((step) => (
-                  <li key={step.text.text}>
-                    <p className="text-basalt max-w-[40rem] leading-relaxed">{step.text.text}</p>
+                  <li key={step.text.text} data-step>
+                    <p className="text-basalt max-w-[40rem] leading-relaxed">
+                      <Text>{step.text.text}</Text>
+                    </p>
                     {step.downloads ? (
                       <ul className="mt-4 flex flex-wrap gap-2">
                         {step.downloads.map((download) => (
@@ -54,26 +64,24 @@ export function Install({ project, page }: { project: Project; page: ProjectPage
                       </ul>
                     ) : null}
                     {step.command ? (
-                      <div className="border-stone/60 bg-white rounded-control mt-4 flex items-start gap-3 border py-2 pr-2 pl-4">
-                        <pre className="text-basalt min-w-0 flex-1 overflow-x-auto py-1.5 font-mono text-sm leading-relaxed">
-                          <code>{step.command}</code>
+                      // On a narrow screen the command wraps, so that all of it shows.
+                      <div className="border-stone/60 bg-white rounded-control mt-4 flex flex-col items-end gap-2 border p-2 pl-4 sm:flex-row sm:items-start sm:gap-3">
+                        <pre className="text-basalt w-full min-w-0 flex-1 py-1.5 font-mono text-sm leading-relaxed break-all whitespace-pre-wrap sm:overflow-x-auto sm:break-normal sm:whitespace-pre">
+                          <code>{step.command.text}</code>
                         </pre>
                         <CopyButton
-                          text={step.command}
+                          text={step.command.text}
                           labels={{ copy: ui.copy.text, copied: ui.copied.text }}
                         />
                       </div>
                     ) : null}
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
           ))}
         </div>
 
-        {page.installNote ? (
-          <p className="text-ocean mt-8 max-w-[40rem] leading-relaxed">{page.installNote.text}</p>
-        ) : null}
       </Container>
     </section>
   );

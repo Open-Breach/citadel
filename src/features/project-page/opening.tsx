@@ -3,11 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ArrowOutIcon, CheckIcon, CloseIcon, StarIcon } from "@/components/ui/icons";
-import { Label } from "@/components/ui/label";
+import { SampleNote } from "@/components/ui/sample-note";
+import { ScaleRule } from "@/components/ui/scale-rule";
 import { image } from "@/content/images";
 import { calls, projectPage, ui } from "@/content/site";
 import type { Project, ProjectPage } from "@/content/types";
 import { formatCount } from "@/lib/format";
+import { Text } from "@/components/ui/text";
 
 /**
  * The top of a project page: what the project is, its four badges, the way
@@ -24,21 +26,20 @@ export function Opening({ project, page }: { project: Project; page: ProjectPage
       aria-labelledby="about-heading"
       className="from-mist to-haze bg-linear-to-b from-20%"
     >
-      <Container className="grid items-center gap-x-8 gap-y-12 pt-28 pb-16 sm:pt-36 lg:grid-cols-12 lg:pt-44 lg:pb-24">
+      <Container className="grid grid-cols-1 items-center gap-x-8 gap-y-12 pt-28 pb-16 sm:pt-36 lg:grid-cols-12 lg:pt-[clamp(7.5rem,18.3svh,11rem)] lg:pb-24">
         <div className="lg:col-span-5">
-          <Label className="rise">{ui.projectLabel.text}</Label>
-          <h1 id="about-heading" className="rise text-display text-basalt mt-5 [--rise-step:1]">
+          <h1 id="about-heading" className="rise text-display text-basalt">
             {project.name}
           </h1>
           <p className="rise text-ocean mt-6 max-w-[34rem] text-lead [--rise-step:2]">
-            {page.what.text}
+            <Text>{page.what.text}</Text>
           </p>
           {page.status ? (
-            <p className="rise text-basalt mt-4 max-w-[34rem] text-[0.9375rem] [--rise-step:2]">
+            <p className="rise text-basalt mt-4 max-w-[34rem] text-control [--rise-step:2]">
               {page.status.text}
             </p>
           ) : null}
-          <ul className="rise mt-7 flex flex-wrap gap-2 [--rise-step:3]">
+          <ul className="rise mt-7 flex max-w-[22rem] flex-wrap gap-2 [--rise-step:3]">
             <li className="flex">
               <Badge label={projectPage.badges.version.text} value={`v${badges.version}`} />
             </li>
@@ -60,6 +61,7 @@ export function Opening({ project, page }: { project: Project; page: ProjectPage
               />
             </li>
           </ul>
+          <SampleNote show={badges.placeholder === true} className="rise mt-3 [--rise-step:3]" />
           <div className="rise mt-8 flex flex-wrap gap-3 [--rise-step:4]">
             <Button href="#install">{calls.install.label}</Button>
             <Button href={project.repository} variant="outlined">
@@ -81,6 +83,10 @@ export function Opening({ project, page }: { project: Project; page: ProjectPage
             />
           </div>
         ) : null}
+      </Container>
+      {/* The opening ends on the instrument scale, where the ground is darkest. */}
+      <Container>
+        <ScaleRule />
       </Container>
     </section>
   );

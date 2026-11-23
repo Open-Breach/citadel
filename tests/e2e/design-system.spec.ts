@@ -357,6 +357,40 @@ test.describe("visible keyboard focus", () => {
   }
 });
 
+test.describe("controls are easy to hit", () => {
+  for (const { name, viewport } of sizes) {
+    test(`at ${name}, every link and button offers 44 pixels of height to hit, and never less than 24 of width`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      for (const path of ["/", "/projects/rick"]) {
+        await page.goto(path);
+        const small = await page.evaluate(() => {
+          const found: string[] = [];
+          for (const element of document.querySelectorAll("a[href], button")) {
+            const style = getComputedStyle(element);
+            // The skip link is out of sight until it has the focus.
+            if (style.display === "none" || element.closest("[hidden], dialog, .sr-only")) continue;
+            // The place to hit is the element, a larger area it lays over itself, or the card it is the link of.
+            const boxes = [element.getBoundingClientRect()];
+            const after = getComputedStyle(element, "::after");
+            if (after.position === "absolute" && after.content !== "none") {
+              const holder = element.closest("article") ?? element;
+              const rect = holder.getBoundingClientRect();
+              const grow = (side: string) => (holder === element ? -parseFloat(after.getPropertyValue(side)) || 0 : 0);
+              boxes.push(new DOMRect(rect.x - grow("left"), rect.y - grow("top"), rect.width + grow("left") + grow("right"), rect.height + grow("top") + grow("bottom")));
+            }
+            const height = Math.max(...boxes.map((box) => box.height));
+            const width = Math.max(...boxes.map((box) => box.width));
+            if (width === 0) continue;
+            if (height < 44 || width < 24) found.push(`${(element.textContent ?? "").trim().slice(0, 30)} ${Math.round(width)}x${Math.round(height)}`);
+          }
+          return found;
+        });
+        expect(small, path).toEqual([]);
+      }
+    });
+  }
+});
+
 test.describe("reduced motion", () => {
   test("with reduced motion on, nothing slides, scales, drifts or moves with scrolling", async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: "reduce", viewport: desktop });
@@ -430,8 +464,14 @@ test.describe("layout adapts to the screen", () => {
   test("at 1440 wide content with several items uses several columns", async ({ page }) => {
     await page.setViewportSize(desktop);
     await page.goto("/");
-    const lefts = await page.locator("#projects article").evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().left)));
-    expect(new Set(lefts).size).toBe(5);
+    const boxes = await page.locator("#projects article").evaluateAll((cards) => cards.map((card) => card.getBoundingClientRect().toJSON()));
+    // The first card spans the row; the other four stand in four columns under it.
+    expect(Math.round(boxes[0].width)).toBe(1296);
+    expect(new Set(boxes.slice(1).map((box) => Math.round(box.left))).size).toBe(4);
+    expect(new Set(boxes.slice(1).map((box) => Math.round(box.top))).size).toBe(1);
+    // And the ruled line above them has one tick for each column.
+    const step = await page.locator("#projects .scale-rule").evaluate((e) => getComputedStyle(e).getPropertyValue("--scale-step"));
+    expect(step).toContain("/ 4");
     const team = await page.locator("#team li").evaluateAll((items) => items.map((item) => Math.round(item.getBoundingClientRect().left)));
     expect(new Set(team).size).toBe(2);
   });

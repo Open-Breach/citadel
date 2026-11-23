@@ -6,7 +6,7 @@ const target = "https://example.org/support";
 /** The navigation and the footer while a support target is configured. */
 export default function SupportLinkFixture() {
   return (
-    <main className="pt-36">
+    <main id="content" className="pt-36">
       <div data-testid="with-support">
         <div className="px-5">
           <Navigation supportUrl={target} fixed={false} />

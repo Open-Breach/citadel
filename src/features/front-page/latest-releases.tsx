@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/container";
 import { ArrowOutIcon } from "@/components/ui/icons";
+import { SampleNote } from "@/components/ui/sample-note";
 import { SectionHeading } from "@/components/ui/section-heading";
 import type { FrontPage } from "@/content/site";
 import type { Project, Release } from "@/content/types";
@@ -25,16 +26,19 @@ export function LatestReleases({
 
   return (
     <section id="releases" aria-labelledby="releases-heading" className="pb-20 lg:pb-32">
-      <Container className="grid gap-x-8 gap-y-10 lg:grid-cols-12">
-        <SectionHeading id="releases-heading" intro={content.intro.text} className="lg:col-span-5">
-          {content.heading.text}
-        </SectionHeading>
-        <ol className="border-stone/40 border-b lg:col-span-6 lg:col-start-7">
+      <Container className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <SectionHeading id="releases-heading" intro={content.intro.text}>
+            {content.heading.text}
+          </SectionHeading>
+          <SampleNote show={releases.some((release) => release.placeholder)} className="mt-4" />
+        </div>
+        <ol className="border-stone/40 border-b lg:col-span-8">
           {releases.map((release) => (
             <li key={`${release.project}-${release.version}`} className="border-stone/40 border-t">
               <a
                 href={release.url}
-                className="lead-on hover:bg-white/70 -mx-3 grid grid-cols-[1fr_auto_auto] items-center gap-x-5 rounded-sm px-3 py-4 transition-colors duration-150 sm:grid-cols-[1fr_5rem_7rem_auto]"
+                className="lead-on hover:bg-white/70 -mx-3 grid grid-cols-[1fr_auto_auto] items-center gap-x-5 rounded-sm px-3 py-4 transition-[color,background-color,border-color] duration-150 sm:grid-cols-[1fr_5rem_7rem_auto]"
               >
                 <span className="text-basalt font-medium">{nameOf(release.project)}</span>
                 <span className="text-basalt font-mono text-sm">v{release.version}</span>

@@ -7,6 +7,7 @@ import { ScaleRule } from "@/components/ui/scale-rule";
 import { image } from "@/content/images";
 import { calls, type FrontPage } from "@/content/site";
 import type { Project } from "@/content/types";
+import { Text } from "@/components/ui/text";
 
 /**
  * The first screen, as on board B: label, headline, two lines, the
@@ -14,7 +15,8 @@ import type { Project } from "@/content/types";
  * and the landscape edge to edge.
  *
  * The text stands above the landscape and never over it. Only the card
- * overlaps the image, and its glass keeps the text on it readable.
+ * overlaps the image, and its glass keeps the text on it readable. On a
+ * desktop screen of the usual height the screen ends on the ocean band.
  */
 export function Hero({ content, featured }: { content: FrontPage["hero"]; featured: Project }) {
   const landscape = image("landscape");
@@ -22,13 +24,13 @@ export function Hero({ content, featured }: { content: FrontPage["hero"]; featur
   return (
     <section
       aria-labelledby="hero-heading"
-      className="from-mist to-haze flex min-h-svh flex-col bg-linear-to-b from-30%"
+      className="from-mist to-haze flex min-h-svh flex-col bg-linear-to-b to-60%"
     >
-      <Container className="pt-28 pb-24 sm:pt-36 lg:pt-44 lg:pb-11">
+      <Container className="pt-28 pb-24 sm:pt-36 lg:pt-[clamp(7.5rem,18.3svh,11rem)] lg:pb-6">
         <Label className="rise">{content.label.text}</Label>
         <h1
           id="hero-heading"
-          className="rise text-display text-basalt mt-5 [--rise-step:1] lg:mt-6"
+          className="rise text-display text-basalt mt-5 [--rise-step:1]"
         >
           {content.headline.map((line) => (
             <span key={line.text} className="block">
@@ -36,10 +38,10 @@ export function Hero({ content, featured }: { content: FrontPage["hero"]; featur
             </span>
           ))}
         </h1>
-        <p className="rise text-ocean mt-6 max-w-[40rem] text-lead [--rise-step:2]">
-          {content.intro.text}
+        <p className="rise text-ocean mt-5 max-w-[40rem] text-lead [--rise-step:2]">
+          <Text>{content.intro.text}</Text>
         </p>
-        <ScaleRule draw className="mt-7 max-w-[22.5rem]" />
+        <ScaleRule draw className="mt-6 max-w-[22.5rem]" />
         <div className="rise mt-3 flex flex-wrap gap-3 [--rise-step:3]">
           <Button href={calls.install.href}>{calls.install.label}</Button>
           <Button href={calls.discuss.href} variant="outlined">
@@ -48,7 +50,7 @@ export function Hero({ content, featured }: { content: FrontPage["hero"]; featur
         </div>
       </Container>
 
-      <div className="relative min-h-[max(20rem,29vw)] flex-1">
+      <div className="relative min-h-[max(20rem,23.6vw)] flex-1">
         <div className="absolute inset-0 overflow-hidden">
           <Image
             src={landscape.src}

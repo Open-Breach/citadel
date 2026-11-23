@@ -25,7 +25,7 @@ export function FrontPage({
     projects.find((project) => project.slug === content.hero.featuredProject) ?? projects[0];
 
   return (
-    <main>
+    <main id="content">
       <Hero content={content.hero} featured={featured} />
       <Mission content={content.mission} />
       <Projects content={content.projects} projects={projects} />

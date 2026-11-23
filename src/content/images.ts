@@ -9,7 +9,7 @@ export const images = {
   landscape: {
     file: "landscape-stand-in.svg",
     width: 1440,
-    height: 420,
+    height: 340,
     description:
       "A drawn landscape: three ridges in light grey, mid grey and near-black over a band of dark ocean.",
     kind: "stand-in",

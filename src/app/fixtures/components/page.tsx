@@ -20,7 +20,7 @@ export default function ComponentsFixture() {
   const landscape = image("landscape");
 
   return (
-    <main className="from-mist to-haze bg-linear-to-b">
+    <main id="content" className="from-mist to-haze bg-linear-to-b">
       <Container className="space-y-12 pt-36 pb-16">
         <h1 className="text-title">Components</h1>
 

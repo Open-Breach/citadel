@@ -10,7 +10,7 @@ In this round the site runs over plain HTTP on localhost only. It has the front 
 
 | Change | What it is | State |
 | --- | --- | --- |
-| [add-site-layout](openspec/changes/add-site-layout/) | Round one: the project's frame, the design system, the front page and the Rick page, over plain HTTP on localhost | Ready to build |
+| [add-site-layout](openspec/changes/add-site-layout/) | Round one: the project's frame, the design system, the front page and the Rick page, over plain HTTP on localhost | Built, waits for Serge's review |
 | [add-https-start-up](openspec/changes/add-https-start-up/) | The switch to HTTPS: certificates from Azure Key Vault picked by host name, the HTTP to HTTPS redirect, the container image | Waits for the certificates |
 | [add-remaining-pages](openspec/changes/add-remaining-pages/) | The other four project pages, Community, Charter, data from GitHub, the real photographs | Provisional, revised after the review of round one |
 
@@ -44,6 +44,8 @@ After `npm install`, the first five need no network. The browser tests need Play
 npx playwright install chromium
 ```
 
+The browser tests build the site into a folder of their own, `.next-e2e`, with a few test pages under `/fixtures` switched on. `npm run dev` shows those pages too: `/fixtures/components` has every component of the design system on one page. In a normal build they are not found.
+
 ## Changing what a page says
 
 Everything a page says is data in `src/content`, not in the components:
@@ -62,11 +64,11 @@ The layout lives in `src/app` (the routes), `src/components` (the shell and the 
 
 ## Design
 
-The look is decided: light, modern and technical, set against sparse landscape, with signal amber as the one accent. The chosen mood board is [docs/design/mood-board-b.png](docs/design/mood-board-b.png), and the design decisions are in the [design of round one](openspec/changes/add-site-layout/design.md).
+The look is decided: light, modern and technical, set against sparse landscape, with signal amber as the one accent. The chosen mood board is [docs/design/mood-board-b.png](docs/design/mood-board-b.png), and the design decisions are in the [design of round one](openspec/changes/add-site-layout/design.md). [DESIGN.md](DESIGN.md) records the design system as it is built.
 
 ## Tools in this repository
 
 - **OpenSpec**: the `openspec/` folder and the OpenSpec skills for Claude Code.
-- **Impeccable**: the design skill and its subagents for Claude Code. Its design hook is not installed.
+- **Impeccable**: the design skill and its subagents for Claude Code. Its design hook is not installed. It reads [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md), and keeps its shared files under `.impeccable/`.
 
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) says where each comes from and under which licence.

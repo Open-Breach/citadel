@@ -12,7 +12,7 @@ import { Why } from "./why";
  */
 export function ProjectPage({ project, page }: { project: Project; page: ProjectPageContent }) {
   return (
-    <main>
+    <main id="content">
       <Opening project={project} page={page} />
       <Why page={page} />
       <Screenshots page={page} />

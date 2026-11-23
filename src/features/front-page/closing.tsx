@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ScaleRule } from "@/components/ui/scale-rule";
 import { calls, type FrontPage } from "@/content/site";
+import { Text } from "@/components/ui/text";
 
 /** The two calls to action again, before the page ends at the shore. */
 export function Closing({ content }: { content: FrontPage["closing"] }) {
@@ -13,9 +14,13 @@ export function Closing({ content }: { content: FrontPage["closing"] }) {
     >
       <Container>
         <h2 id="closing-heading" className="text-title text-basalt">
-          {content.heading.text}
+          {content.heading.map((line) => (
+            <span key={line.text} className="block">
+              {line.text}
+            </span>
+          ))}
         </h2>
-        <p className="text-ocean mt-5 max-w-[34rem] text-lead">{content.text.text}</p>
+        <p className="text-ocean mt-5 max-w-[34rem] text-lead"><Text>{content.text.text}</Text></p>
         <ScaleRule className="mt-7 max-w-[22.5rem]" />
         <div className="mt-3 flex flex-wrap gap-3">
           <Button href={calls.install.href}>{calls.install.label}</Button>

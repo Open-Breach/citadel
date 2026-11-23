@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import {
   expectNoHorizontalScroll,
   expectNoOverlapOrCutOff,
+  gotoReady,
   isInViewport,
   recordForeignRequests,
   scrollThrough,
@@ -46,7 +47,7 @@ test.describe("what it is and why it exists", () => {
 
 test.describe("screenshots", () => {
   test("at least three screenshots are shown", async ({ page }) => {
-    await page.goto("/projects/rick");
+    await gotoReady(page, "/projects/rick");
     const shots = page.locator("#screenshots figure img");
     expect(await shots.count()).toBeGreaterThanOrEqual(3);
     await scrollThrough(page);
@@ -58,7 +59,7 @@ test.describe("screenshots", () => {
   });
 
   test("each screenshot is announced with what it shows", async ({ page }) => {
-    await page.goto("/projects/rick");
+    await gotoReady(page, "/projects/rick");
     const alts = await page.locator("#screenshots figure img").evaluateAll((images) => images.map((img) => img.getAttribute("alt") ?? ""));
     for (const alt of alts) expect(alt.length).toBeGreaterThan(20);
     expect(new Set(alts).size).toBe(alts.length);
@@ -72,7 +73,7 @@ test.describe("screenshots", () => {
   for (const { name, viewport } of sizes) {
     test(`at ${name}, a screenshot is shown larger, and the larger view closes with the keyboard`, async ({ page }) => {
       await page.setViewportSize(viewport);
-      await page.goto("/projects/rick");
+      await gotoReady(page, "/projects/rick");
       const thumbnails = page.locator("#screenshots figure button");
       const second = thumbnails.nth(1);
       await second.scrollIntoViewIfNeeded();
@@ -141,14 +142,14 @@ test.describe("install instructions", () => {
     for (const platform of ["Linux", "macOS", "Windows"]) {
       const block = install.locator(`[data-platform="${platform}"]`);
       await expect(block.getByRole("heading", { level: 3 })).toHaveText(platform);
-      expect(await block.locator("ol > li").count()).toBeGreaterThanOrEqual(1);
+      expect(await block.locator("[data-step]").count()).toBeGreaterThanOrEqual(1);
     }
     await expect(install.getByRole("link", { name: /Windows x64/ })).toHaveAttribute("href", /rick-0\.6\.0-windows-x64\.zip$/);
   });
 
   test("a command is text in the page, not an image, and can be copied", async ({ page, context }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.goto("/projects/rick");
+    await gotoReady(page, "/projects/rick");
     const command = page.locator("#install pre code").first();
     await expect(command).toHaveText("curl -fsSL https://get.openbreach.dev/install.sh | sh -s rick");
     await expect(page.locator("#install pre img, #install pre svg")).toHaveCount(0);
@@ -171,6 +172,16 @@ test.describe("install instructions", () => {
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("curl -fsSL https://get.openbreach.dev/install.sh | sh -s rick");
   });
 
+  test("the word of caution comes before the first command", async ({ page }) => {
+    await page.goto("/projects/rick");
+    const order = await page.locator("#install").evaluate((section) => {
+      const note = [...section.querySelectorAll("p")].find((p) => (p.textContent ?? "").includes("run it on data you have backed up"));
+      const command = section.querySelector("pre");
+      return note && command ? note.compareDocumentPosition(command) & Node.DOCUMENT_POSITION_FOLLOWING : 0;
+    });
+    expect(order).toBeTruthy();
+  });
+
   test("Install at the top of the page leads to the install steps", async ({ page }) => {
     await page.goto("/projects/rick");
     await page.locator("#about").getByRole("link", { name: "Install" }).click();
@@ -188,6 +199,18 @@ test.describe("badges drawn by the site", () => {
     await expect(page.locator("#about ul img")).toHaveCount(0);
     const fonts = await badges.locator("span span").last().evaluate((e) => getComputedStyle(e).fontFamily);
     expect(fonts).toMatch(/geist/i);
+  });
+
+  test("the four badges stand two and two, and say that their values are a sample", async ({ page }) => {
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/projects/rick");
+      const tops = await page.locator("#about ul").first().getByRole("listitem").evaluateAll((items) => items.map((item) => Math.round(item.getBoundingClientRect().top)));
+      expect(tops[0]).toBe(tops[1]);
+      expect(tops[2]).toBe(tops[3]);
+      expect(tops[2]).toBeGreaterThan(tops[0]);
+      await expect(page.locator("#about").getByText("Sample data")).toBeVisible();
+    }
   });
 
   test("no badge is requested from another host", async ({ page, baseURL }) => {
@@ -270,12 +293,25 @@ test.describe("the page at both widths", () => {
     });
   }
 
-  test("at 390 wide a long command scrolls inside its box, not the page", async ({ page }) => {
+  test("at 390 wide a long command wraps inside its box and shows whole", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/projects/rick");
-    const pre = page.locator("#install pre").nth(1);
-    const { scrollWidth, clientWidth } = await pre.evaluate((e) => ({ scrollWidth: e.scrollWidth, clientWidth: e.clientWidth }));
-    expect(scrollWidth).toBeGreaterThan(clientWidth);
+    for (const pre of await page.locator("#install pre").all()) {
+      const { scrollWidth, clientWidth, lines } = await pre.evaluate((e) => ({
+        scrollWidth: e.scrollWidth,
+        clientWidth: e.clientWidth,
+        lines: Math.round(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e).lineHeight)),
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      expect(lines).toBeGreaterThan(1);
+    }
     await expectNoHorizontalScroll(page);
+  });
+
+  test("at 1440 wide a command stays on one line", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/projects/rick");
+    const pre = page.locator("#install pre").first();
+    expect(await pre.evaluate((e) => getComputedStyle(e).whiteSpace)).toBe("pre");
   });
 });

@@ -12,6 +12,9 @@ import { ProjectPage } from "@/features/project-page/project-page";
  */
 export const ensureStatic = "navigation";
 
+// The route waits for its name on purpose, so the check for instant navigation is off for it.
+export const instant = false;
+
 /** The five projects. Any other name under /projects/ is not found. */
 export function generateStaticParams() {
   return projects.map((project) => ({ name: project.slug }));
@@ -32,6 +35,6 @@ export default async function Page({ params }: PageProps<"/projects/[name]">) {
   const project = findProject(name);
   if (!project) notFound();
   // A project whose page is not built yet gets the still-to-come page.
-  if (!project.page) return <StillToCome name={project.name} />;
+  if (!project.page) return <StillToCome name={project.name} project={project} />;
   return <ProjectPage project={project} page={project.page} />;
 }

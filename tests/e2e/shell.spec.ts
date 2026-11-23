@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { projects } from "../../src/content/projects.ts";
-import { desktop, isInViewport, phone } from "./helpers.ts";
+import { desktop, gotoReady, isInViewport, phone } from "./helpers.ts";
 
 const entries = ["Projects", "Community", "Charter", "Team"];
 const stillToCome = ["/community", "/charter", "/projects/meeseeks", "/projects/gossip", "/projects/trebuchet", "/projects/butterbot"];
@@ -56,7 +56,7 @@ test.describe("navigation on small screens", () => {
   test.use({ viewport: phone });
 
   test("the entries are behind a menu control, and Open-Breach and Install are visible", async ({ page }) => {
-    await page.goto("/");
+    await gotoReady(page, "/");
     const nav = page.getByRole("navigation", { name: "Main" });
     await expect(nav.getByRole("link", { name: "Open-Breach" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Install" })).toBeVisible();
@@ -74,7 +74,7 @@ test.describe("navigation on small screens", () => {
       Team: "/#team",
     };
     for (const entry of entries) {
-      await page.goto("/projects/rick");
+      await gotoReady(page, "/projects/rick");
       const nav = page.getByRole("navigation", { name: "Main" });
       await nav.getByRole("button", { name: "Menu" }).click();
       for (const other of entries) {
@@ -86,7 +86,7 @@ test.describe("navigation on small screens", () => {
   });
 
   test("the menu opens and closes with the menu control", async ({ page }) => {
-    await page.goto("/");
+    await gotoReady(page, "/");
     const nav = page.getByRole("navigation", { name: "Main" });
     await nav.getByRole("button", { name: "Menu" }).click();
     await expect(nav.getByRole("link", { name: "Charter" })).toBeVisible();
@@ -96,11 +96,13 @@ test.describe("navigation on small screens", () => {
   });
 
   test("with the keyboard alone the menu is focused, opened, walked through and closed", async ({ page }) => {
-    await page.goto("/");
+    await gotoReady(page, "/");
     const nav = page.getByRole("navigation", { name: "Main" });
     const control = nav.getByRole("button", { name: "Menu" });
 
-    // Tab from the top of the page: the name, Install, then the menu control.
+    // Tab from the top of the page: the skip link, the name, Install, then the menu control.
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "Skip to the content" })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(nav.getByRole("link", { name: "Open-Breach" })).toBeFocused();
     await page.keyboard.press("Tab");
@@ -126,6 +128,21 @@ test.describe("navigation on small screens", () => {
     await expect(nav.getByRole("link", { name: "Community" })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL("/community");
+  });
+});
+
+test.describe("skip link", () => {
+  test("the first Tab stop leads past the navigation to the content", async ({ page }) => {
+    for (const path of ["/", "/projects/rick", "/community", "/no-such-page"]) {
+      await page.goto(path);
+      const skip = page.getByRole("link", { name: "Skip to the content" });
+      await page.keyboard.press("Tab");
+      await expect(skip).toBeFocused();
+      await expect(skip).toBeInViewport();
+      await page.keyboard.press("Enter");
+      await expect(page).toHaveURL(new RegExp("#content$"));
+      await expect(page.locator("main#content")).toHaveCount(1);
+    }
   });
 });
 
@@ -232,6 +249,23 @@ test.describe("no dead links to pages that are not built", () => {
       await expect(page.getByRole("main").getByRole("link", { name: "Back to the front page" })).toHaveAttribute("href", "/");
     });
   }
+
+  test("the page of a project that is still to come says what the project is and links to its source", async ({ page }) => {
+    await page.goto("/projects/meeseeks");
+    const main = page.getByRole("main");
+    await expect(main).toContainText("A virtual second monitor for Linux.");
+    await expect(main.getByRole("link", { name: "Meeseeks on GitHub" })).toHaveAttribute("href", "https://github.com/Open-Breach/meeseeks");
+  });
+
+  test("the navigation marks the page that is open", async ({ page }) => {
+    await page.setViewportSize(desktop);
+    await page.goto("/community");
+    const nav = page.getByRole("navigation", { name: "Main" });
+    await expect(nav.getByRole("link", { name: "Community" })).toHaveAttribute("aria-current", "page");
+    await expect(nav.locator("[aria-current]:visible")).toHaveCount(1);
+    await page.goto("/");
+    await expect(nav.locator("[aria-current]")).toHaveCount(0);
+  });
 
   test("the built pages do not ask to be kept out of search engines", async ({ page }) => {
     for (const path of ["/", "/projects/rick"]) {

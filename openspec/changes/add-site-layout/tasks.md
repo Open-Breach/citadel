@@ -46,8 +46,8 @@
 
 ## 7. Review package
 
-- [ ] 7.1 Run Impeccable's critique and audit on both pages at 390 and 1440 pixels wide and fix what they find; verify the audit reports no remaining finding, or that each remaining one is listed in the pull request with the reason
-- [ ] 7.2 Run every check; verify `npm run build`, `npm run lint`, `npm run typecheck`, `npm test` and `npm run test:e2e` pass
+- [x] 7.1 Run Impeccable's critique and audit on both pages at 390 and 1440 pixels wide and fix what they find; verify the audit reports no remaining finding, or that each remaining one is listed in the pull request with the reason
+- [x] 7.2 Run every check; verify `npm run build`, `npm run lint`, `npm run typecheck`, `npm test` and `npm run test:e2e` pass
 - [ ] 7.3 Capture screenshots of the front page and the Rick page at 390 and 1440 pixels wide and attach them to the pull request, with the output of `npm run placeholders` and the two departures from the board of design D7; verify the pull request shows all four screenshots
 - [ ] 7.4 Stop. The round ends here, and Serge looks at the site running before anything else is started
 

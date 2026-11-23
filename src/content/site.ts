@@ -54,6 +54,11 @@ export const ui = {
   mainNavigation: final("Main"),
   footerNavigation: final("Footer"),
   runsOn: final("Runs on"),
+  /** Shown beside data that carries the placeholder marker. */
+  sampleData: final("Sample data"),
+  onGithub: final("on GitHub"),
+  panHint: final("Move the image sideways to see all of it."),
+  skipToContent: final("Skip to the content"),
   download: final("Download"),
 };
 
@@ -125,7 +130,9 @@ export const frontPage = {
   },
   projects: {
     heading: draft("Five projects"),
-    intro: draft("Each one is free software, developed in public on GitHub."),
+    intro: draft(
+      "Each one is free software, developed in public on GitHub. Pick one to see what it does and how to install it.",
+    ),
   },
   claude: {
     heading: draft("Built with Claude"),
@@ -162,7 +169,8 @@ export const frontPage = {
     intro: draft("The people behind Open-Breach."),
   },
   closing: {
-    heading: draft("Try a tool. Tell us what breaks."),
+    /** One entry per line of the heading. */
+    heading: [draft("Try a tool."), draft("Tell us what breaks.")],
     text: draft(
       "Everything here is young software. An honest report of what you saw is the most useful thing you can give.",
     ),

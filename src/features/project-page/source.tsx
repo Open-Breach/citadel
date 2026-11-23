@@ -4,6 +4,7 @@ import { ArrowOutIcon } from "@/components/ui/icons";
 import { ScaleRule } from "@/components/ui/scale-rule";
 import { calls, projectPage, ui } from "@/content/site";
 import type { Project, ProjectPage } from "@/content/types";
+import { Text } from "@/components/ui/text";
 
 /** The link to the project's repository on GitHub, and the way to the discussion. */
 export function Source({ project, page }: { project: Project; page: ProjectPage }) {
@@ -21,10 +22,10 @@ export function Source({ project, page }: { project: Project; page: ProjectPage 
         <h2 id="source-heading" className="text-title text-basalt">
           {projectPage.sourceHeading.text}
         </h2>
-        <p className="text-ocean mt-5 max-w-[34rem] text-lead">{text}</p>
+        <p className="text-ocean mt-5 max-w-[34rem] text-lead"><Text>{text}</Text></p>
         <ScaleRule className="mt-7 max-w-[22.5rem]" />
         <div className="mt-3 flex flex-wrap gap-3">
-          <Button href={project.repository}>
+          <Button href={project.repository} variant="solid">
             {ui.sourceLink.text}
             <ArrowOutIcon />
           </Button>

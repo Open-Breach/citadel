@@ -44,12 +44,17 @@ export type Feature = {
 export type Download = {
   label: string;
   url: string;
+  /** Set while the file is not confirmed against a published release. */
+  placeholder?: true;
 };
 
 export type InstallStep = {
   text: Copy;
-  /** A command to run, shown as text that can be selected and copied. */
-  command?: string;
+  /**
+   * A command to run, shown as text that can be selected and copied. It
+   * carries the placeholder marker until it is confirmed to work.
+   */
+  command?: Copy;
   downloads?: Download[];
 };
 

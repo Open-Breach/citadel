@@ -3,6 +3,7 @@ import {
   desktop,
   expectNoHorizontalScroll,
   expectNoOverlapOrCutOff,
+  gotoReady,
   isInViewport,
   scrollThrough,
   sizes,
@@ -27,6 +28,30 @@ test.describe("introduction and mission", () => {
       expect(await isInViewport(first.locator(".scale-rule"))).toBe(true);
     });
   }
+
+  test("on a desktop screen the first screen ends on the ocean, as on board B", async ({ page }) => {
+    for (const viewport of [{ width: 1440, height: 900 }, { width: 1440, height: 960 }, { width: 1920, height: 1080 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto("/");
+      const first = (await page.locator("main section").first().boundingBox())!;
+      // The ocean is the lowest fifth of the landscape: it is in view.
+      expect(first.height).toBeLessThanOrEqual(viewport.height + 8);
+      const card = page.locator("main section").first().locator("article");
+      expect(await isInViewport(card)).toBe(true);
+    }
+  });
+
+  test("the name Open-Breach never breaks at its hyphen", async ({ page }) => {
+    for (const width of [390, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
+      const names = page.locator("main span", { hasText: /^Open-Breach$/ });
+      expect(await names.count()).toBeGreaterThan(3);
+      for (const name of await names.all()) {
+        expect(await name.evaluate((e) => e.getClientRects().length), "one line").toBe(1);
+      }
+    }
+  });
 
   test("a mission statement says what Open-Breach is for", async ({ page }) => {
     await page.goto("/");
@@ -106,6 +131,13 @@ test.describe("a card for each project", () => {
     await expect(cards.nth(1).getByRole("list", { name: "Runs on" }).getByRole("listitem")).toHaveText(["Linux"]);
     // Trebuchet is not a program a visitor runs: no platforms, and no empty list.
     await expect(cards.nth(3).getByRole("list")).toHaveCount(0);
+  });
+
+  test("the first card shows the project at work", async ({ page }) => {
+    await page.goto("/");
+    const card = page.locator("#projects article").first();
+    await expect(card.locator("img")).toHaveAttribute("alt", /Rick with two panes/);
+    await expect(page.locator("#projects article img")).toHaveCount(1);
   });
 
   test("Rick's card opens the Rick page", async ({ page }) => {
@@ -193,6 +225,11 @@ test.describe("latest releases", () => {
     await expect(page.locator("#releases")).not.toContainText("v0.3.0");
   });
 
+  test("while the entries are sample data, the section says so", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#releases").getByText("Sample data")).toBeVisible();
+  });
+
   test("an entry shows the project, the version and the date, and leads to that release", async ({ page }) => {
     await page.goto("/");
     const first = page.locator("#releases ol > li").first();
@@ -210,8 +247,8 @@ test.describe("latest releases", () => {
     await expect(page.getByRole("heading", { name: "Built with Claude" })).toBeVisible();
     await expect(page.locator("#releases")).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "Latest releases" })).toHaveCount(0);
-    await expect(page.locator("main ol")).toHaveCount(0);
     await expect(page.locator("main ul:empty, main ol:empty, main dl:empty")).toHaveCount(0);
+    await expect(page.getByText("Sample data")).toHaveCount(0);
     // The sections around it close up.
     const ids = await page.locator("main > section").evaluateAll((sections) => sections.map((s) => s.id || s.getAttribute("aria-labelledby")));
     expect(ids).toEqual(["hero-heading", "mission", "projects", "built-with-claude", "team", "next"]);
@@ -239,7 +276,7 @@ test.describe("the team", () => {
   for (const { name, viewport } of sizes) {
     test(`at ${name}, Team in the navigation shows the team section`, async ({ page }) => {
       await page.setViewportSize(viewport);
-      await page.goto("/");
+      await gotoReady(page, "/");
       const nav = page.getByRole("navigation", { name: "Main" });
       if (viewport.width < 1024) await nav.getByRole("button", { name: "Menu" }).click();
       await nav.getByRole("link", { name: "Team" }).click();

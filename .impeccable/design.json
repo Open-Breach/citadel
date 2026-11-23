@@ -1,0 +1,454 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-23T04:53:07Z",
+  "title": "Design System: Citadel",
+  "extensions": {
+    "colorMeta": {
+      "amber": {
+        "role": "primary",
+        "displayName": "Signal Amber",
+        "tonalRamp": [
+          "#3d1c00",
+          "#6b3300",
+          "#a04a00",
+          "#d16a08",
+          "#ff8a1f",
+          "#ffab5c",
+          "#ffcd9e",
+          "#ffeedd"
+        ]
+      },
+      "amber-deep": {
+        "role": "primary",
+        "displayName": "Deep Amber (proposed name)",
+        "tonalRamp": [
+          "#2e1500",
+          "#4f2400",
+          "#753600",
+          "#a04a00",
+          "#c46a24",
+          "#dc9460",
+          "#eec3a3",
+          "#faeadf"
+        ]
+      },
+      "amber-bright": {
+        "role": "primary",
+        "displayName": "Bright Amber (proposed name)",
+        "tonalRamp": [
+          "#3f1f04",
+          "#6e380a",
+          "#a65512",
+          "#dc7722",
+          "#ff9a3d",
+          "#ffb672",
+          "#ffd4ab",
+          "#fff0e2"
+        ]
+      },
+      "amber-pressed": {
+        "role": "primary",
+        "displayName": "Pressed Amber (proposed name)",
+        "tonalRamp": [
+          "#3a1a00",
+          "#662f00",
+          "#994800",
+          "#c96106",
+          "#f07a0c",
+          "#f8a153",
+          "#fcc797",
+          "#feecda"
+        ]
+      },
+      "mist": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "tonalRamp": [
+          "#1f2326",
+          "#3b4146",
+          "#5c646a",
+          "#868e94",
+          "#b0b7bc",
+          "#d3d8dc",
+          "#e8ecee",
+          "#f5f7f8"
+        ]
+      },
+      "haze": {
+        "role": "neutral",
+        "displayName": "Haze",
+        "tonalRamp": [
+          "#1d2124",
+          "#373d42",
+          "#565e64",
+          "#7b848a",
+          "#a3abb0",
+          "#c4cace",
+          "#dde2e5",
+          "#eef1f2"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "#222222",
+          "#444444",
+          "#6b6b6b",
+          "#939393",
+          "#b9b9b9",
+          "#dadada",
+          "#f0f0f0",
+          "#ffffff"
+        ]
+      },
+      "stone": {
+        "role": "neutral",
+        "displayName": "Stone",
+        "tonalRamp": [
+          "#1c1e20",
+          "#34383b",
+          "#50555a",
+          "#6d7379",
+          "#8a9096",
+          "#aab0b5",
+          "#ccd0d3",
+          "#eceef0"
+        ]
+      },
+      "fog": {
+        "role": "neutral",
+        "displayName": "Fog",
+        "tonalRamp": [
+          "#1c2023",
+          "#353b3f",
+          "#535a60",
+          "#757d83",
+          "#9aa1a7",
+          "#c3c9ce",
+          "#dde1e4",
+          "#f0f2f3"
+        ]
+      },
+      "ocean": {
+        "role": "neutral",
+        "displayName": "Ocean",
+        "tonalRamp": [
+          "#141a1f",
+          "#262f37",
+          "#3e4a55",
+          "#596672",
+          "#788490",
+          "#9ca6b0",
+          "#c4cbd1",
+          "#e9ecef"
+        ]
+      },
+      "basalt": {
+        "role": "neutral",
+        "displayName": "Basalt",
+        "tonalRamp": [
+          "#1e2124",
+          "#33383c",
+          "#4c5257",
+          "#696f75",
+          "#8a9096",
+          "#adb2b6",
+          "#d0d3d6",
+          "#eef0f1"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The headline of the first screen and the name of a project at the top of its page."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The heading of a section and the closing headline."
+      },
+      "statement": {
+        "displayName": "Statement",
+        "purpose": "The one large sentence of a section, in Basalt."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "The lines under a headline or section heading, in Ocean."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text: Ocean when secondary, Basalt when it instructs."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "A small signal in spaced capitals, in Deep Amber."
+      },
+      "reading": {
+        "displayName": "Reading",
+        "purpose": "The longer paragraphs of the mission and of \"Why\". Size only."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Buttons, card taglines, footer links and notes under a heading. Size only."
+      },
+      "fine": {
+        "displayName": "Fine",
+        "purpose": "Badges, the name in the navigation and the footer, and the Copy control. Size only."
+      },
+      "name": {
+        "displayName": "Name",
+        "purpose": "The name of a project on its card. Size only."
+      },
+      "name-wide": {
+        "displayName": "Name wide",
+        "purpose": "The name on the wide first card. Size only."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Versions, dates and commands, in Geist Mono."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glass",
+        "value": "0 1px 1px color-mix(in srgb, #1e2124 4%, transparent), 0 18px 40px -18px color-mix(in srgb, #1e2124 22%, transparent)",
+        "purpose": "Under every glass panel at rest."
+      },
+      {
+        "name": "window",
+        "value": "0 1px 2px color-mix(in srgb, #1e2124 8%, transparent), 0 32px 64px -28px color-mix(in srgb, #1e2124 34%, transparent)",
+        "purpose": "Under a screenshot shown as a window, and under a project card while the pointer is on it."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The one easing of the site."
+      },
+      {
+        "name": "rise",
+        "value": "700ms ease-out-expo, from opacity 0 and translateY(0.75rem), 70ms apart",
+        "purpose": "The first screen composes itself once, in reading order."
+      },
+      {
+        "name": "scale-draw",
+        "value": "1100ms ease-out-expo after 150ms, clip-path from the left",
+        "purpose": "The instrument scale draws itself in on load."
+      },
+      {
+        "name": "drift",
+        "value": "translateY(-2.5%) to translateY(2.5%) at scale(1.05), on the view timeline",
+        "purpose": "The landscape drifts slightly against the scroll, where the browser supports it."
+      },
+      {
+        "name": "lead-on-arrow",
+        "value": "translateX(0.25rem) over 250ms ease-out-expo",
+        "purpose": "The arrow of a link that leads on, under the pointer or with focus."
+      },
+      {
+        "name": "fade-in",
+        "value": "500ms ease-out-expo, from opacity 0",
+        "purpose": "The menu of the navigation opening."
+      },
+      {
+        "name": "state",
+        "value": "color, background-color, border-color over 150ms to 200ms",
+        "purpose": "State changes of controls. Only these properties are listed, so the focus ring never fades in from another colour."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "fade-in 300ms ease-out",
+        "purpose": "Replaces rise and scale-draw; drift, the arrow and smooth scrolling are off."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Filled Button",
+      "kind": "button",
+      "refersTo": "button-filled",
+      "description": "Install, the prominent call to action, and nothing else: Signal Amber with a Basalt label.",
+      "html": "<a class=\"ds-btn ds-btn-filled\" href=\"#\">Install</a>",
+      "css": ".ds-btn { font-family: var(--font-sans); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.5rem 1.25rem; border-radius: var(--radius-control); font-size: var(--text-control); font-weight: 500; text-decoration: none; cursor: pointer; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-btn:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-btn-filled { background-color: var(--color-amber); color: var(--color-basalt); } .ds-btn-filled:hover { background-color: var(--color-amber-bright); } .ds-btn-filled:active { background-color: var(--color-amber-pressed); }"
+    },
+    {
+      "name": "Solid Button",
+      "kind": "button",
+      "refersTo": "button-solid",
+      "description": "The first action of a place where that action is not Install: Basalt with a Mist label.",
+      "html": "<a class=\"ds-btn ds-btn-solid\" href=\"#\">Source on GitHub <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.5 11.5l7-7M6 4.5h5.5V10\"/></svg></a>",
+      "css": ".ds-btn { font-family: var(--font-sans); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.5rem 1.25rem; border-radius: var(--radius-control); font-size: var(--text-control); font-weight: 500; text-decoration: none; cursor: pointer; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-btn:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-btn-solid { background-color: var(--color-basalt); color: var(--color-mist); } .ds-btn-solid:hover, .ds-btn-solid:active { background-color: var(--color-ocean); }"
+    },
+    {
+      "name": "Outlined Button",
+      "kind": "button",
+      "refersTo": "button-outlined",
+      "description": "The second action: a Basalt outline that inverts under the pointer.",
+      "html": "<a class=\"ds-btn ds-btn-outlined\" href=\"#\">Join the discussion</a>",
+      "css": ".ds-btn { font-family: var(--font-sans); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.5rem 1.25rem; border-radius: var(--radius-control); font-size: var(--text-control); font-weight: 500; text-decoration: none; cursor: pointer; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-btn:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-btn-outlined { border: 1px solid var(--color-basalt); color: var(--color-basalt); background-color: transparent; } .ds-btn-outlined:hover { background-color: var(--color-basalt); color: var(--color-mist); } .ds-btn-outlined:active { background-color: var(--color-ocean); color: var(--color-mist); }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "An outlined pill that names a platform a program runs on. Not a control.",
+      "html": "<span class=\"ds-chip\">Linux</span> <span class=\"ds-chip\">macOS</span> <span class=\"ds-chip\">Windows</span>",
+      "css": ".ds-chip { font-family: var(--font-sans); display: inline-flex; align-items: center; height: 1.5rem; padding: 0 0.625rem; border: 1px solid var(--color-stone); border-radius: 9999px; color: var(--color-basalt); font-size: 0.75rem; line-height: 1; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "navigation-bar",
+      "description": "One rounded glass panel with the name in spaced capitals, the entries and the small Install button.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-name\" href=\"#\">Open-Breach</a><a class=\"ds-nav-entry\" href=\"#\">Projects</a><a class=\"ds-nav-entry\" href=\"#\">Community</a><a class=\"ds-nav-entry\" href=\"#\">Charter</a><a class=\"ds-nav-entry\" href=\"#\">Team</a><a class=\"ds-nav-install\" href=\"#\">Install</a></nav>",
+      "css": ".ds-nav { font-family: var(--font-sans); display: inline-flex; align-items: center; gap: 2.25rem; min-height: 3.5rem; padding: 0 0.625rem 0 1.75rem; border-radius: var(--radius-panel); background-color: color-mix(in srgb, var(--color-white) 66%, transparent); border: 1px solid color-mix(in srgb, var(--color-white) 78%, transparent); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); box-shadow: var(--shadow-glass); } .ds-nav a { text-decoration: none; color: var(--color-basalt); } .ds-nav a:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-nav-name { font-size: var(--text-fine); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; } .ds-nav-entry { font-size: 0.875rem; text-underline-offset: 0.4em; text-decoration-color: var(--color-stone); } .ds-nav a.ds-nav-entry:hover { text-decoration: underline; text-decoration-color: var(--color-stone); } .ds-nav-install { display: inline-flex; align-items: center; height: 2.25rem; padding: 0 1rem; border-radius: var(--radius-control); background-color: var(--color-amber); font-size: 0.875rem; font-weight: 500; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-nav-install:hover { background-color: var(--color-amber-bright); } .ds-nav-install:active { background-color: var(--color-amber-pressed); }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "project-card",
+      "description": "A glass card for one project: label, name, one line, platform chips and the link that leads on. The whole card is one link.",
+      "html": "<article class=\"ds-card\"><p class=\"ds-card-label\">Project</p><h3 class=\"ds-card-name\"><a href=\"#\">Rick</a></h3><p class=\"ds-card-line\">A file manager written in Rust.</p><ul class=\"ds-card-chips\"><li class=\"ds-chip\">Linux</li><li class=\"ds-chip\">macOS</li><li class=\"ds-chip\">Windows</li></ul><p class=\"ds-card-explore\">Explore <svg class=\"ds-arrow\" viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2.5 8h11M9.5 4l4 4-4 4\"/></svg></p></article>",
+      "css": ".ds-card { font-family: var(--font-sans); position: relative; display: flex; flex-direction: column; width: 16.25rem; padding: 1.5rem; border-radius: var(--radius-card); background-color: color-mix(in srgb, var(--color-white) 88%, transparent); border: 1px solid color-mix(in srgb, var(--color-white) 90%, transparent); -webkit-backdrop-filter: blur(22px) saturate(1.15); backdrop-filter: blur(22px) saturate(1.15); box-shadow: var(--shadow-glass); transition: border-color 200ms, box-shadow 200ms; } .ds-card:hover { border-color: var(--color-stone); box-shadow: var(--shadow-window); } .ds-card:has(a:focus-visible) { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-card-label { margin: 0 0 1rem; color: var(--color-amber-deep); font-size: 0.75rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; } .ds-card-name { margin: 0; color: var(--color-basalt); font-size: var(--text-name); font-weight: 600; line-height: 1; letter-spacing: -0.02em; } .ds-card-name a { color: inherit; text-decoration: none; outline: none; } .ds-card-name a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-card); } .ds-card-line { margin: 0.875rem 0 0; color: var(--color-ocean); font-size: var(--text-control); line-height: 1.375; } .ds-card-chips { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 1rem 0 0; padding: 0; list-style: none; } .ds-chip { font-family: var(--font-sans); display: inline-flex; align-items: center; height: 1.5rem; padding: 0 0.625rem; border: 1px solid var(--color-stone); border-radius: 9999px; color: var(--color-basalt); font-size: 0.75rem; line-height: 1; } .ds-card-explore { display: flex; align-items: center; gap: 0.375rem; margin: 0; padding-top: 1.25rem; color: var(--color-amber-deep); font-size: 0.875rem; font-weight: 500; } .ds-arrow { transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card:hover .ds-arrow, .ds-card:has(a:focus-visible) .ds-arrow { transform: translateX(0.25rem); }"
+    },
+    {
+      "name": "Instrument Scale",
+      "kind": "custom",
+      "description": "The signature: a ruled line with tick marks every 3.75rem and a longer first tick. It divides and measures.",
+      "html": "<div class=\"ds-scale\" aria-hidden=\"true\"></div>",
+      "css": ".ds-scale { width: 22.5rem; max-width: 100%; position: relative; height: 0.5rem; border-top: 1px solid var(--color-stone); background-image: repeating-linear-gradient(to right, var(--color-stone) 0 1px, transparent 1px 3.75rem); background-size: 100% 0.3125rem; background-repeat: no-repeat; animation: ds-scale-draw 1100ms cubic-bezier(0.16, 1, 0.3, 1) 150ms backwards; } .ds-scale::before { content: ''; position: absolute; top: 0; left: 0; width: 1px; height: 0.5rem; background-color: var(--color-stone); } @keyframes ds-scale-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } } @media (prefers-reduced-motion: reduce) { .ds-scale { animation: none; } }"
+    },
+    {
+      "name": "Label",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "A small signal in spaced capitals, in Deep Amber. Used in two places only.",
+      "html": "<p class=\"ds-label\">Open-Breach · Open source tools</p>",
+      "css": ".ds-label { font-family: var(--font-sans); margin: 0; color: var(--color-amber-deep); font-size: 0.75rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "custom",
+      "refersTo": "badge",
+      "description": "A badge drawn by the site: what is measured on the left, its value in mono on the right.",
+      "html": "<span class=\"ds-badge\"><span class=\"ds-badge-label\">version</span><span class=\"ds-badge-value\">v0.6.0</span></span>",
+      "css": ".ds-badge { font-family: var(--font-sans); display: inline-flex; align-items: stretch; min-height: 1.75rem; overflow: hidden; border: 1px solid color-mix(in srgb, var(--color-stone) 60%, transparent); border-radius: 0.375rem; font-size: var(--text-fine); line-height: 1; } .ds-badge-label { display: flex; align-items: center; padding: 0 0.625rem; background-color: color-mix(in srgb, var(--color-white) 70%, transparent); color: var(--color-ocean); } .ds-badge-value { display: flex; align-items: center; gap: 0.375rem; padding: 0 0.625rem; border-left: 1px solid color-mix(in srgb, var(--color-stone) 60%, transparent); color: var(--color-basalt); font-family: var(--font-mono); }"
+    },
+    {
+      "name": "Release Row",
+      "kind": "custom",
+      "description": "A row between hairlines: project, version and date in mono, and an arrow in Deep Amber that moves under the pointer.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-row-name\">Rick</span><span class=\"ds-row-version\">v0.6.0</span><time class=\"ds-row-date\">20 Nov 2026</time><svg class=\"ds-row-arrow\" viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.5 11.5l7-7M6 4.5h5.5V10\"/></svg></a>",
+      "css": ".ds-row { font-family: var(--font-sans); display: grid; grid-template-columns: 1fr 5rem 7rem auto; align-items: center; column-gap: 1.25rem; padding: 1rem 0.75rem; border-top: 1px solid color-mix(in srgb, var(--color-stone) 40%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--color-stone) 40%, transparent); border-radius: 0.25rem; text-decoration: none; transition: background-color 150ms; } .ds-row:hover { background-color: color-mix(in srgb, var(--color-white) 70%, transparent); } .ds-row:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-row-name { color: var(--color-basalt); font-weight: 500; } .ds-row-version { color: var(--color-basalt); font-family: var(--font-mono); font-size: 0.875rem; } .ds-row-date { color: var(--color-ocean); font-family: var(--font-mono); font-size: 0.875rem; } .ds-row-arrow { color: var(--color-amber-deep); transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-row:hover .ds-row-arrow, .ds-row:focus-visible .ds-row-arrow { transform: translateX(0.25rem); }"
+    }
+  ],
+  "narrative": {
+    "northStarStatus": "Proposed name, waiting for the owner's yes.",
+    "northStar": "The Instrument Panel on the Coast",
+    "overview": "Clean technology set in raw nature. The site is light and technical: a pale ground of white and pale grey, thin precise lines and glass-like translucent panels, laid over sparse terrain of black stone, grey stone and ocean water. Signal amber is the one accent.\n\nThe direction was decided by Serge on 2026-11-22. The chosen mood board is `docs/design/mood-board-b.png`, and the decisions are in `openspec/changes/add-site-layout/design.md` (D6 and D7). The films Oblivion and Minority Report were named as a mood only. Nothing is copied from them, and stills from films are never used. Two results would feel wrong to the owner: a page that is heavy or dark, and a generic SaaS landing page.\n\nEvery colour, type size, radius and shadow is defined once, in the `@theme` block of `src/app/globals.css`. Tailwind's own palette is switched off, so the eleven colours below are the only ones that exist. Components use the tokens and hold no colour value of their own.\n\nMotion is quiet. One easing is used everywhere, an exponential ease-out (`cubic-bezier(0.16, 1, 0.3, 1)`). The first screen composes itself once in reading order, with small lifts of 0.75rem over 700ms, 70ms apart. The instrument scale draws itself in from the left over 1100ms. The landscape drifts by 2.5 per cent against the scroll. The arrow of a link that leads on moves 0.25rem to the right under the pointer. State changes take 150ms to 200ms, and a control lists only its text colour, background colour and border colour as the properties that change, so the focus ring never fades in from another colour. Where the visitor asks for reduced motion, the lifts and the drawn scale become a 300ms fade, and nothing slides, scales, drifts or moves with scrolling.",
+    "keyCharacteristics": [
+      "A light scheme: Mist ground, Basalt type, Stone hairlines.",
+      "Signal amber as the one accent, on actions and small signals only.",
+      "Glass panels with a thin light edge and one soft shadow.",
+      "The instrument scale as the divider and the measure.",
+      "Landscape of stone and ocean, edge to edge, at the top and the foot of the page.",
+      "Labels in spaced capitals; versions, dates and commands in mono."
+    ],
+    "rules": [
+      {
+        "name": "The Instrument Rule",
+        "body": "Every line on the page could be the edge of an instrument: thin, exact and placed on purpose. The reusable signature is the instrument scale, a ruled line with tick marks, which divides and measures.",
+        "section": "overview"
+      },
+      {
+        "name": "The Landscape Rule",
+        "body": "Imagery shows sparse terrain only: black stone, grey stone, ocean water. No green and no turquoise. The finished site uses real photographs, each recorded with its source, author and licence. Until they are chosen, a drawn stand-in in the same tones and proportions takes their place, and replacing it does not change the layout around it. In the build the stand-ins are two drawn SVG files: layered ridges over a band of ocean for the first screen, and a shore above the footer.",
+        "section": "overview"
+      },
+      {
+        "name": "The One Accent Rule",
+        "body": "Signal amber is the only saturated colour. No second accent hue marks an interactive or highlighted element, in any state. Hover and pressed states of amber stay amber; hover states elsewhere turn to Basalt or Ocean.",
+        "section": "colors"
+      },
+      {
+        "name": "The Amber Marks Actions Rule",
+        "body": "Amber is kept for the Install call to action and for small signals, such as a label or a link that leads on. It is never the colour of running text or of a large surface. On the first screen, the Install call to action is the largest amber element.",
+        "section": "colors"
+      },
+      {
+        "name": "The Amber Means Install Rule",
+        "body": "An amber fill means Install only. Where the first action of a place is not Install, such as \"Source on GitHub\" at the close of a project page, it is a solid Basalt button, and no other action borrows the amber fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Rule",
+        "body": "Text meets WCAG 2.1 level AA against what is behind it, on panels, on amber and over imagery: 4.5 to 1, and 3 to 1 for large text. `tests/unit/tokens.test.ts` checks every pair used for text. Two consequences are deliberate departures from the mood board. Secondary text is Ocean, not Stone, because Stone on Mist reaches only 3.00 to 1. Small amber text uses Deep Amber, because Signal Amber on Mist reaches only 2.19 to 1; the fills stay Signal Amber. The label on an amber fill is Basalt (6.86 to 1), never white.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mono Means Data Rule",
+        "body": "Geist Mono is for versions, dates and commands. It is never used for a heading, for running text or for a note about data: the \"Sample data\" note is a note, so it is set in the sans.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Labels Rule",
+        "body": "The small amber label in spaced capitals appears in two places, both taken from the mood board by the owner's decision: above the headline of the first screen, and on the project card where it stands alone there. No other section or heading gets one.",
+        "section": "typography"
+      },
+      {
+        "name": "The Glass Fallback Rule",
+        "body": "Where the browser cannot soften what lies behind a panel, the panel falls back to a pale opaque surface (white mixed with 6 per cent Mist) with a Stone edge at 22 per cent, on which its text stays readable. A panel that lies over imagery keeps its text at 4.5 to 1 wherever the image is light or dark.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Small Dark Rule",
+        "body": "Basalt and Ocean surfaces stay small against the Mist: the landscape, the water band of the footer, and a control under the pointer. No section of content is set on a dark ground.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep amber for actions and small signals: Signal Amber for fills, Deep Amber for small text.",
+      "Do set secondary text in Ocean on the light ground and in Fog on Ocean and Basalt.",
+      "Do put a Basalt label on an amber fill.",
+      "Do use the solid Basalt button for a first action that is not Install.",
+      "Do show the focus mark on every link, button and control: a 2px Basalt ring at a 3px offset, Mist on dark grounds.",
+      "Do divide with the instrument scale, hairlines and space before reaching for a box.",
+      "Do take every colour, type size and shadow from the theme tokens, and every radius from the three radius tokens unless it is a window corner or a badge.",
+      "Do record every image with its source, author and licence before it is used.",
+      "Do write everything that moves inside the block for visitors who accept motion, with the exponential ease-out."
+    ],
+    "donts": [
+      "Don't add a second accent hue, for any state.",
+      "Don't give an amber fill to any action other than Install.",
+      "Don't set running text in amber, or fill a large surface with it.",
+      "Don't set text in Stone at body sizes, or in Signal Amber at any size.",
+      "Don't use green or turquoise in imagery.",
+      "Don't use stills from films.",
+      "Don't let the page turn heavy or dark. Basalt and Ocean surfaces stay small against the Mist.",
+      "Don't build a generic SaaS landing page: no centred headline over a gradient, no grid of icon cards, no wall of claims.",
+      "Don't put a small amber label above any heading other than the two the mood board shows.",
+      "Don't lay text directly over the landscape. Only a glass card overlaps it.",
+      "Don't stack shadows or lift flat content. The glass shadow and the window shadow are the whole vocabulary."
+    ]
+  }
+}

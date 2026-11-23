@@ -175,3 +175,13 @@ export async function scrollThrough(page: Page) {
   });
   await page.waitForLoadState("networkidle");
 }
+
+/**
+ * Opens a page and waits until its scripts have run, so that the controls
+ * that need them (the menu, the larger view, Copy) answer.
+ */
+export async function gotoReady(page: Page, path: string) {
+  const response = await page.goto(path);
+  await page.waitForLoadState("networkidle");
+  return response;
+}

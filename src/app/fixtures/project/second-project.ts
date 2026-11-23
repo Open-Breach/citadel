@@ -32,7 +32,7 @@ export const secondProject: Project = {
     install: [
       {
         platform: "Linux",
-        steps: [{ text: draft("Run the command."), command: "fixture --install" }],
+        steps: [{ text: draft("Run the command."), command: draft("fixture --install") }],
       },
     ],
     badges: { version: "1.2.3", build: "failing", licence: "MIT", stars: 7, placeholder: true },

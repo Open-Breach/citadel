@@ -4,9 +4,10 @@ import { Container } from "@/components/ui/container";
 import { ArrowOutIcon } from "@/components/ui/icons";
 import { image } from "@/content/images";
 import { footer, site, ui } from "@/content/site";
+import { Text } from "@/components/ui/text";
 
 const linkClasses =
-  "text-mist decoration-fog inline-flex items-center gap-1.5 rounded-sm underline-offset-[0.4em] hover:underline";
+  "text-mist decoration-fog inline-flex min-h-11 items-center gap-1.5 rounded-sm underline-offset-[0.4em] hover:underline";
 
 /**
  * The footer every page ends with: the shore, then the water. It links to
@@ -30,13 +31,13 @@ export function Footer({ supportUrl = site.supportUrl }: { supportUrl?: string |
       <div className="bg-ocean text-mist water-lines">
         <Container className="flex flex-col gap-10 pt-20 pb-12 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-[0.8125rem] font-semibold tracking-[0.16em] uppercase">
+            <p className="text-fine font-semibold tracking-[0.16em] uppercase">
               {site.name}
             </p>
-            <p className="text-fog mt-3 text-[0.9375rem]">{footer.line.text}</p>
+            <p className="text-fog mt-3 text-control"><Text>{footer.line.text}</Text></p>
           </div>
           <nav aria-label={ui.footerNavigation.text}>
-            <ul className="flex flex-col gap-x-9 gap-y-3 text-[0.9375rem] sm:flex-row sm:items-center">
+            <ul className="flex flex-col gap-x-9 text-control sm:flex-row sm:items-center">
               <li>
                 <a href={site.githubUrl} className={linkClasses}>
                   {ui.githubLink.text}

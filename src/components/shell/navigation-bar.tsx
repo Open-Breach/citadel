@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import { buttonClasses } from "@/components/ui/button";
 import { CloseIcon, MenuIcon } from "@/components/ui/icons";
@@ -10,6 +11,9 @@ type Entry = { label: string; href: string };
 
 const entryClasses =
   "text-basalt decoration-stone rounded-sm text-sm underline-offset-[0.4em] hover:underline";
+
+// In the bar a link is as tall as the bar, so that it is easy to hit.
+const inBar = "flex min-h-14 items-center";
 
 /**
  * The navigation as one glass panel. On a wide screen the entries stand in
@@ -46,10 +50,13 @@ export function NavigationBar({
         }
       }}
     >
-      <div className="glass rounded-panel flex h-14 items-center justify-between gap-2 pr-2.5 pl-5 lg:justify-start lg:gap-9 lg:pl-7">
+      <div className="glass rounded-panel flex min-h-14 flex-wrap items-center justify-between gap-x-2 pr-2.5 pl-5 lg:justify-start lg:gap-x-9 lg:pl-7">
         <Link
           href="/"
-          className="text-basalt rounded-sm text-[0.8125rem] font-semibold tracking-[0.16em] uppercase"
+          className={cn(
+            inBar,
+            "text-basalt rounded-sm text-fine font-semibold tracking-[0.16em] uppercase",
+          )}
         >
           {name}
         </Link>
@@ -57,12 +64,12 @@ export function NavigationBar({
         <ul className="hidden items-center gap-9 lg:flex">
           {allEntries.map((entry) => (
             <li key={entry.href}>
-              <NavLink entry={entry} />
+              <NavLink entry={entry} className={inBar} />
             </li>
           ))}
         </ul>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <Link href={install.href} className={buttonClasses("filled", "sm")}>
             {install.label}
           </Link>
@@ -72,7 +79,7 @@ export function NavigationBar({
             aria-expanded={open}
             aria-controls={menuId}
             onClick={() => setOpen(!open)}
-            className="text-basalt rounded-control hover:bg-basalt hover:text-mist flex size-9 items-center justify-center transition-colors duration-150 lg:hidden"
+            className="text-basalt rounded-control hover:bg-basalt hover:text-mist relative flex size-9 items-center justify-center transition-[color,background-color,border-color] duration-150 after:absolute after:-inset-1 lg:hidden"
           >
             {open ? <CloseIcon /> : <MenuIcon />}
             <span className="sr-only">{open ? labels.closeMenu : labels.menu}</span>
@@ -83,7 +90,7 @@ export function NavigationBar({
       <div
         id={menuId}
         hidden={!open}
-        className="glass rounded-panel animate-fade-in absolute inset-x-0 top-full mt-2 p-2 lg:hidden"
+        className="glass-card rounded-panel animate-fade-in absolute inset-x-0 top-full mt-2 p-2 lg:hidden"
       >
         <ul>
           {allEntries.map((entry) => (
@@ -91,7 +98,7 @@ export function NavigationBar({
               <NavLink
                 entry={entry}
                 onClick={() => setOpen(false)}
-                className="rounded-control hover:bg-basalt hover:text-mist flex h-12 items-center px-3 text-base transition-colors duration-150 hover:no-underline"
+                className="rounded-control hover:bg-basalt hover:text-mist flex h-12 items-center px-3 text-base transition-[color,background-color,border-color] duration-150 hover:no-underline"
               />
             </li>
           ))}
@@ -110,10 +117,17 @@ function NavLink({
   onClick?: () => void;
   className?: string;
 }) {
-  const classes = cn(entryClasses, className);
+  // The entry of the page that is open is marked as the current one.
+  const current = usePathname() === entry.href;
+  const classes = cn(entryClasses, current && "underline decoration-basalt", className);
   if (entry.href.startsWith("/")) {
     return (
-      <Link href={entry.href} onClick={onClick} className={classes}>
+      <Link
+        href={entry.href}
+        onClick={onClick}
+        aria-current={current ? "page" : undefined}
+        className={classes}
+      >
         {entry.label}
       </Link>
     );

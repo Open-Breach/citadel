@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { Text } from "@/components/ui/text";
 
 /** The heading of a section, with an optional line under it. */
 export function SectionHeading({
@@ -9,16 +8,20 @@ export function SectionHeading({
   className,
 }: {
   id: string;
-  children: ReactNode;
-  intro?: ReactNode;
+  children: string;
+  intro?: string;
   className?: string;
 }) {
   return (
     <div className={className}>
       <h2 id={id} className="text-title text-basalt">
-        {children}
+        <Text>{children}</Text>
       </h2>
-      {intro ? <p className={cn("text-ocean mt-4 max-w-[34rem] text-lead")}>{intro}</p> : null}
+      {intro ? (
+        <p className="text-ocean mt-4 max-w-[34rem] text-lead">
+          <Text>{intro}</Text>
+        </p>
+      ) : null}
     </div>
   );
 }
