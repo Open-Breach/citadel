@@ -2,8 +2,8 @@
 
 ## 0. Before the round
 
-- [ ] 0.1 Check that pull request 1 is merged into `main`, then archive `add-site-layout` with the OpenSpec archive skill; verify `openspec/specs/` holds the five capabilities of round one and `openspec validate --all --strict` passes. If the pull request is not merged, stop and tell Serge
-- [ ] 0.2 Check that the four files of design D1 are in `public/images/photographs/`; verify each opens as a JPEG and is at most 3840 pixels wide. If one is missing, stop and tell Serge. A file narrower than 2880 pixels is a reduced copy (design D3): go on, and name it in the report
+- [x] 0.1 Check that pull request 1 is merged into `main`, then archive `add-site-layout` with the OpenSpec archive skill; verify `openspec/specs/` holds the five capabilities of round one and `openspec validate --all --strict` passes. If the pull request is not merged, stop and tell Serge
+- [x] 0.2 Check that the four files of design D1 are in `public/images/photographs/`; verify each opens as a JPEG and is at most 3840 pixels wide. If one is missing, stop and tell Serge. A file narrower than 2880 pixels is a reduced copy (design D3): go on, and name it in the report
 
 ## 1. Photographs and their records
 

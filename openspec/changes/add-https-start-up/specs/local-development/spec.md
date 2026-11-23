@@ -13,8 +13,8 @@
 - **WHEN** the developer changes a text in the source while the dev server runs
 - **THEN** the browser shows the change without the server being restarted
 
-#### Scenario: Nothing configured
-- **WHEN** `npm run dev` runs with no vault named
+#### Scenario: Clean checkout
+- **WHEN** a developer runs `npm install` and then `npm run dev` on a clean checkout, with no vault named
 - **THEN** it does not start, and says which settings are missing and where they are set
 
 #### Scenario: Another address
