@@ -3,13 +3,13 @@
 ## 0. Before the round
 
 - [ ] 0.1 Check that pull request 1 is merged into `main`, then archive `add-site-layout` with the OpenSpec archive skill; verify `openspec/specs/` holds the five capabilities of round one and `openspec validate --all --strict` passes. If the pull request is not merged, stop and tell Serge
-- [ ] 0.2 Check that the four files of design D1 are in `public/images/photographs/`; verify each opens as a JPEG and is at most 3840 pixels wide. If one is missing, stop and tell Serge
+- [ ] 0.2 Check that the four files of design D1 are in `public/images/photographs/`; verify each opens as a JPEG and is at most 3840 pixels wide. If one is missing, stop and tell Serge. A file narrower than 2880 pixels is a reduced copy (design D3): go on, and name it in the report
 
 ## 1. Photographs and their records
 
 - [ ] 1.1 Add the field `changes` to the image record type and one record for each photograph with the facts of design D1 and D3, and remove the two drawn landscapes with their records; verify `npm test` passes, and that it fails when a record of a photograph has no source, no author, no licence or no `changes`
 - [ ] 1.2 Add the section "Photographs" to `THIRD-PARTY-NOTICES.md` (design D3); verify it names the four photographs with source, photographer and licence
-- [ ] 1.3 Set up the delivery of design D10; verify with a browser check that at 1440 pixels wide and two device pixels per pixel the first screen's photograph arrives at least 2880 pixels wide, that at 390 pixels wide a smaller file arrives, and that no blurred preview is shown
+- [ ] 1.3 Set up the delivery of design D10; verify with a browser check that at 1440 pixels wide and two device pixels per pixel the first screen's photograph arrives at least 2880 pixels wide, or at the full width of its file while that file is a reduced copy, that at 390 pixels wide a smaller file arrives, and that no blurred preview is shown
 
 ## 2. The first screen
 

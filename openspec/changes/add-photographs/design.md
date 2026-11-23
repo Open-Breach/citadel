@@ -59,6 +59,8 @@ Proposed, which of the three goes where:
 - The sea stack has a small patch of moss. Serge chose the picture knowing that. In the file its green is toned down until it reads as grey, so that "no green" holds. The record says so.
 - `src/content/images.ts` holds one record for each photograph with `kind: "photograph"`, the source and the photographer of D1, the licence "Unsplash License", and a new field `changes` that says what was done to the file (resized, toned). The records of the two drawn landscapes and their files are removed.
 - `THIRD-PARTY-NOTICES.md` gains a section "Photographs" with the same facts and the sentence that the photographs are not covered by the repository's own licence.
+- The files committed on 23 November 2026 are reduced copies, 2576 pixels wide, because the chat that carried them to Claude made them smaller. The full-size files replace them under the same names as soon as Serge sends them. Build the delivery of D10 for the larger files all the same.
+- Until task 1.1 the check of the image records fails, because the four files have no record yet. That is expected.
 
 ### D4. The first screen (decided: basalt columns behind the text, light text)
 
