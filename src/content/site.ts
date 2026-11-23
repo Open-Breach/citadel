@@ -57,8 +57,9 @@ export const ui = {
   /** Shown beside data that carries the placeholder marker. */
   sampleData: final("Sample data"),
   onGithub: final("on GitHub"),
-  panHint: final("Move the image sideways to see all of it."),
   skipToContent: final("Skip to the content"),
+  /** Beside a way of installing that is announced but not published. */
+  stillToCome: final("Still to come"),
   download: final("Download"),
 };
 
@@ -85,6 +86,9 @@ export const projectPage = {
 
 export const footer = {
   line: draft("Open tools, built in the open."),
+  /** Before the names of the photographers. */
+  credits: final("Photographs by"),
+  creditsAnd: final("and"),
 };
 
 export const notFound = {

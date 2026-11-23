@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ProjectCard } from "@/components/project-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,18 +6,16 @@ import { Container } from "@/components/ui/container";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { CheckIcon, StarIcon } from "@/components/ui/icons";
 import { Label } from "@/components/ui/label";
+import { Photograph } from "@/components/ui/photograph";
 import { ScaleRule } from "@/components/ui/scale-rule";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { image } from "@/content/images";
 import { projectBySlug } from "@/content/projects";
 
 /**
  * The scratch page of the design system: every component once, on the pale
- * ground and over the landscape, to compare with board B.
+ * ground and over a photograph, to compare with board B.
  */
 export default function ComponentsFixture() {
-  const landscape = image("landscape");
-
   return (
     <main id="content" className="from-mist to-haze bg-linear-to-b">
       <Container className="space-y-12 pt-36 pb-16">
@@ -75,11 +72,11 @@ export default function ComponentsFixture() {
       </Container>
 
       <section
-        aria-label="Glass over the landscape"
+        aria-label="Glass over a photograph"
         data-component="glass"
         className="relative h-[30rem]"
       >
-        <Image src={landscape.src} alt="" fill sizes="100vw" className="object-cover object-bottom" />
+        <Photograph id="basaltColumns" sizes="100vw" className="absolute inset-0" />
         <Container className="relative flex flex-wrap items-start gap-6 pt-40">
           <GlassPanel variant="bar" className="flex h-14 items-center px-7 text-sm">
             A glass bar with Basalt text

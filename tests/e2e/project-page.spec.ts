@@ -10,6 +10,7 @@ import {
 } from "./helpers.ts";
 
 const parts = ["about", "why", "screenshots", "features", "install", "source"];
+const tar = "tar xzf rick-0.6.0-linux-x64.tar.gz && ./rick-0.6.0-linux-x64/rick";
 
 test.describe("a page for a project", () => {
   test("/projects/rick returns the Rick page with the status 200", async ({ page }) => {
@@ -65,7 +66,7 @@ test.describe("screenshots", () => {
     expect(new Set(alts).size).toBe(alts.length);
     expect(alts[0]).toBe("Rick with two panes side by side and the preview pane showing a 3D model of a pig.");
     // The opening's screenshot has its text alternative too.
-    await expect(page.locator("#about img")).toHaveAttribute("alt", /Rick with two panes/);
+    await expect(page.locator('#about img:not([alt=""])')).toHaveAttribute("alt", /Rick with two panes/);
     // Each is a button, named after what it shows.
     await expect(page.locator("#screenshots").getByRole("button", { name: /Rick in its dark theme.*View larger/ })).toHaveCount(1);
   });
@@ -86,9 +87,13 @@ test.describe("screenshots", () => {
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAccessibleName(/Rick in its dark theme/);
       const large = (await dialog.locator("img").boundingBox())!;
-      expect(large.width).toBeGreaterThan(small.width * 1.5);
-      // The view itself stays inside the screen. On a narrow screen the
-      // image in it is wider than the screen and is moved sideways.
+      // Larger than in the page where the screen has room for it, and at
+      // every width the whole screenshot within the screen: nothing is moved sideways.
+      if (viewport.width > 1000) expect(large.width).toBeGreaterThan(small.width * 1.5);
+      expect(large.x).toBeGreaterThanOrEqual(0);
+      expect(large.x + large.width).toBeLessThanOrEqual(viewport.width);
+      expect(await dialog.evaluate((e) => [...e.querySelectorAll("*"), e].some((el) => el.scrollWidth > el.clientWidth + 1))).toBe(false);
+      await expect(dialog).not.toContainText("sideways");
       const view = (await dialog.boundingBox())!;
       expect(view.x).toBeGreaterThanOrEqual(0);
       expect(view.x + view.width).toBeLessThanOrEqual(viewport.width);
@@ -151,7 +156,7 @@ test.describe("install instructions", () => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await gotoReady(page, "/projects/rick");
     const command = page.locator("#install pre code").first();
-    await expect(command).toHaveText("curl -fsSL https://get.openbreach.dev/install.sh | sh -s rick");
+    await expect(command).toHaveText(tar);
     await expect(page.locator("#install pre img, #install pre svg")).toHaveCount(0);
     expect(await command.evaluate((e) => getComputedStyle(e).userSelect)).not.toBe("none");
 
@@ -163,13 +168,38 @@ test.describe("install instructions", () => {
       selection.removeAllRanges();
       selection.addRange(range);
     });
-    expect(await page.evaluate(() => window.getSelection()!.toString())).toBe("curl -fsSL https://get.openbreach.dev/install.sh | sh -s rick");
+    expect(await page.evaluate(() => window.getSelection()!.toString())).toBe(tar);
 
     // And its button copies it.
     const copy = page.locator("#install").getByRole("button", { name: "Copy" }).first();
     await copy.click();
     await expect(page.locator("#install").getByRole("button", { name: "Copied" })).toBeVisible();
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("curl -fsSL https://get.openbreach.dev/install.sh | sh -s rick");
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(tar);
+  });
+
+  test("a way of installing that is not published shows no command and is named as still to come", async ({ page }) => {
+    await page.goto("/projects/rick");
+    const install = page.locator("#install");
+    const later = install.locator("[data-step]").filter({ hasText: "package repository" });
+    await expect(later).toHaveCount(1);
+    await expect(later.locator("[data-still-to-come]")).toHaveText("Still to come");
+    await expect(later.locator("pre, a")).toHaveCount(0);
+    // No command on the page reaches for a host.
+    for (const command of await install.locator("pre code").allTextContents()) {
+      expect(command).not.toMatch(/https?:\/\//);
+    }
+    await expect(install).not.toContainText("get.openbreach.dev");
+  });
+
+  test("every download leads to a file of Rick's latest release", async ({ page }) => {
+    await page.goto("/projects/rick");
+    const hrefs = await page.locator("#install [data-step] a").evaluateAll((all) => all.map((a) => a.getAttribute("href")));
+    expect(hrefs).toEqual([
+      "https://github.com/Open-Breach/rick/releases/download/v0.6.0/rick-0.6.0-linux-x64.tar.gz",
+      "https://github.com/Open-Breach/rick/releases/download/v0.6.0/rick-0.6.0-linux-arm64.tar.gz",
+      "https://github.com/Open-Breach/rick/releases/download/v0.6.0/rick-0.6.0-macos-arm64.zip",
+      "https://github.com/Open-Breach/rick/releases/download/v0.6.0/rick-0.6.0-windows-x64.zip",
+    ]);
   });
 
   test("the word of caution comes before the first command", async ({ page }) => {
@@ -313,5 +343,6 @@ test.describe("the page at both widths", () => {
     await page.goto("/projects/rick");
     const pre = page.locator("#install pre").first();
     expect(await pre.evaluate((e) => getComputedStyle(e).whiteSpace)).toBe("pre");
+    expect(await pre.evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(true);
   });
 });

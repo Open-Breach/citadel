@@ -56,6 +56,11 @@ export type InstallStep = {
    */
   command?: Copy;
   downloads?: Download[];
+  /**
+   * Set for a way of installing that is announced but not published. It is
+   * named as still to come and shows no command and no download.
+   */
+  stillToCome?: true;
 };
 
 export type InstallInstructions = {
@@ -136,10 +141,22 @@ export type ImageRecord = {
   /** What the image shows. The text alternative where the image carries meaning. */
   description: string;
   kind: "stand-in" | "screenshot" | "photograph";
-  /** Where the image comes from. */
+  /** Where the image comes from. For a photograph, the page it was taken from. */
   source: string;
   author: string;
   licence: string;
+  /** What was done to the file before it was added: resized, toned, or nothing. */
+  changes: string;
+  /**
+   * False for an image that is not covered by the licence of this
+   * repository, as every photograph is.
+   */
+  coveredByRepositoryLicence?: false;
+  /**
+   * The flat tone its place has while a photograph loads: the name of a
+   * colour token close to the picture.
+   */
+  tone?: "basalt" | "ocean" | "haze";
   /** The pages that use the image. */
   usedOn: string[];
   /** Set while the image stands in for one that is still to be chosen. */

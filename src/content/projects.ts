@@ -8,9 +8,11 @@ import { draft, type Project, type ProjectSlug } from "./types.ts";
  * means filling in `page` here, and nothing else.
  *
  * The texts are drafts. Rick's follow the README of Open-Breach/rick; the
- * one-liners of the others follow their READMEs. Rick's install commands
- * and download links are copied from its README and stay marked until
- * someone has run them against a published release.
+ * one-liners of the others follow their READMEs.
+ *
+ * Rick's downloads were checked on 23 November 2026: v0.6.0 is the latest
+ * release and each file is there. A way of installing that is announced
+ * but not published is named as still to come and shows no command.
  */
 
 const rickRelease = "https://github.com/Open-Breach/rick/releases/download/v0.6.0";
@@ -101,19 +103,20 @@ export const projects: Project[] = [
           steps: [
             {
               text: draft(
-                "Add the Open-Breach repository and install Rick with apt or dnf. Updates then arrive with those of your system.",
-              ),
-              command: draft("curl -fsSL https://get.openbreach.dev/install.sh | sh -s rick"),
-            },
-            {
-              text: draft(
-                "Or run Rick from the archive, with nothing installed. It needs glibc 2.36 or later, which Debian 12 and Ubuntu 24.04 have.",
+                "Run Rick from the archive, with nothing installed. It needs glibc 2.36 or later, which Debian 12 and Ubuntu 24.04 have.",
               ),
               downloads: [
-                { label: "Linux x64", url: `${rickRelease}/rick-0.6.0-linux-x64.tar.gz`, placeholder: true },
-                { label: "Linux arm64", url: `${rickRelease}/rick-0.6.0-linux-arm64.tar.gz`, placeholder: true },
+                { label: "Linux x64", url: `${rickRelease}/rick-0.6.0-linux-x64.tar.gz` },
+                { label: "Linux arm64", url: `${rickRelease}/rick-0.6.0-linux-arm64.tar.gz` },
               ],
               command: draft("tar xzf rick-0.6.0-linux-x64.tar.gz && ./rick-0.6.0-linux-x64/rick"),
+            },
+            {
+              // Announced, not published: named without a command (design D11 of add-photographs).
+              text: draft(
+                "Installing Rick from the Open-Breach package repository, with apt or dnf, so that updates arrive with those of your system.",
+              ),
+              stillToCome: true,
             },
           ],
         },
@@ -125,7 +128,7 @@ export const projects: Project[] = [
               text: draft(
                 "Download the archive, unzip it, drag Rick.app to Applications and open it. The app is not notarised yet: allow it under System Settings, Privacy & Security.",
               ),
-              downloads: [{ label: "macOS arm64", url: `${rickRelease}/rick-0.6.0-macos-arm64.zip`, placeholder: true }],
+              downloads: [{ label: "macOS arm64", url: `${rickRelease}/rick-0.6.0-macos-arm64.zip` }],
             },
           ],
         },
@@ -137,7 +140,7 @@ export const projects: Project[] = [
               text: draft(
                 "Download the archive, unpack it and run rick.exe. SmartScreen may warn the first time.",
               ),
-              downloads: [{ label: "Windows x64", url: `${rickRelease}/rick-0.6.0-windows-x64.zip`, placeholder: true }],
+              downloads: [{ label: "Windows x64", url: `${rickRelease}/rick-0.6.0-windows-x64.zip` }],
             },
           ],
         },

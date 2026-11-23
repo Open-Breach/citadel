@@ -23,8 +23,9 @@ const inBar = "flex min-h-14 items-center";
 export function NavigationBar({
   name,
   entries,
-  install,
+  install: installElsewhere,
   support,
+  projectPages,
   labels,
 }: {
   name: string;
@@ -32,12 +33,20 @@ export function NavigationBar({
   install: Entry;
   /** The support link. Left out, with no gap, while it has no target. */
   support: Entry | null;
+  /** The paths of the project pages that have install instructions. */
+  projectPages: string[];
   labels: { navigation: string; menu: string; closeMenu: string };
 }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const control = useRef<HTMLButtonElement>(null);
   const allEntries = support ? [...entries, support] : entries;
+  // On a project page Install leads to that page's install instructions, and
+  // the visitor stays on the page. Everywhere else it leads to the projects.
+  const pathname = usePathname();
+  const install = projectPages.includes(pathname)
+    ? { label: installElsewhere.label, href: `${pathname}#install` }
+    : installElsewhere;
 
   return (
     <nav

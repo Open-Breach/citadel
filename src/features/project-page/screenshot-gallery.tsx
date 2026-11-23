@@ -16,15 +16,16 @@ export type GalleryItem = {
 };
 
 /**
- * The screenshots of a project. Each one opens a larger view, which closes
- * with the Escape key, with its Close button or with a click beside it.
+ * The screenshots of a project. Each one opens a larger view, which fits
+ * the screen at every width and closes with the Escape key, with its Close
+ * button or with a click beside it.
  */
 export function ScreenshotGallery({
   items,
   labels,
 }: {
   items: GalleryItem[];
-  labels: { viewLarger: string; close: string; panHint: string };
+  labels: { viewLarger: string; close: string };
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -44,7 +45,7 @@ export function ScreenshotGallery({
     <>
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {items.map((item, index) => (
-          <li key={item.src} className={cn(index === 0 && "lg:col-span-2 lg:row-span-2")}>
+          <li key={`${index}-${item.src}`} className={cn(index === 0 && "lg:col-span-2 lg:row-span-2")}>
             <figure className="flex h-full flex-col">
               <button
                 type="button"
@@ -89,21 +90,17 @@ export function ScreenshotGallery({
       >
         {current ? (
           <figure className="bg-mist rounded-xl p-2 sm:p-3">
-            {/* On a narrow screen the image stays larger than the screen and is moved sideways. */}
-            <div className="border-stone/40 overflow-x-auto rounded-lg border">
-              <Image
-                src={current.src}
-                alt={current.description}
-                width={current.width}
-                height={current.height}
-                sizes="(min-width: 1024px) 100vw, 48rem"
-                className="h-auto w-full max-w-none min-w-[44rem] lg:min-w-0"
-              />
-            </div>
+            {/* The whole screenshot, within the screen at every width. */}
+            <Image
+              src={current.src}
+              alt={current.description}
+              width={current.width}
+              height={current.height}
+              sizes="100vw"
+              className="border-stone/40 h-auto w-full rounded-lg border"
+            />
             <div className="flex items-center justify-between gap-4 px-1 pt-2 sm:pt-3">
-              <figcaption className="text-ocean text-sm">
-                {current.caption} <span className="lg:hidden">{labels.panHint}</span>
-              </figcaption>
+              <figcaption className="text-ocean text-sm">{current.caption}</figcaption>
               <form method="dialog">
                 <button
                   ref={closeButton}

@@ -16,9 +16,12 @@ export default defineConfig({
     trace: "off",
   },
   projects: [
+    // Resizes the photographs once, so that no test waits for the encoder.
+    { name: "warm-up", testMatch: /warm-up\.setup\.ts/, use: { ...devices["Desktop Chrome"] } },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      dependencies: ["warm-up"],
     },
   ],
   webServer: {

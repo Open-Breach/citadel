@@ -168,12 +168,13 @@ export async function recordForeignRequests(page: Page, baseURL: string): Promis
 export async function scrollThrough(page: Page) {
   await page.evaluate(async () => {
     for (let y = 0; y < document.body.scrollHeight; y += 500) {
-      window.scrollTo(0, y);
+      window.scrollTo({ top: y, behavior: "instant" });
       await new Promise((resolve) => setTimeout(resolve, 60));
     }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
   });
   await page.waitForLoadState("networkidle");
+  await page.waitForFunction(() => window.scrollY === 0);
 }
 
 /**
@@ -184,4 +185,162 @@ export async function gotoReady(page: Page, path: string) {
   const response = await page.goto(path);
   await page.waitForLoadState("networkidle");
   return response;
+}
+
+/** The four widths at which text over photographs is measured (design D5 of add-photographs). */
+export const photographWidths = [390, 768, 1440, 1920];
+
+export type MeasuredLine = {
+  text: string;
+  /** The photograph the line lies over. */
+  photograph: string;
+  required: number;
+  /** The share of the pixels under the line that fall below the requirement. */
+  below: number;
+  /** The contrast that 19 of 20 pixels under the line reach. */
+  contrast: number;
+};
+
+/**
+ * Measures the contrast of every line of text that lies over a photograph,
+ * on the rendered page.
+ *
+ * It notes each line with its place, its colour and its size, hides all
+ * text, takes a picture of the whole page, and reads the pixels under each
+ * line. The requirement is 4.5 to 1, or 3 to 1 for large text. A line passes
+ * when at most one pixel in twenty is below it.
+ */
+export async function measureTextOverPhotographs(page: Page): Promise<MeasuredLine[]> {
+  await scrollThrough(page);
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll<HTMLImageElement>("[data-photograph] img")].every(
+      (img) => img.complete && img.naturalWidth > 0,
+    ),
+  );
+
+  const lines = await page.evaluate(() => {
+    const photographs = [...document.querySelectorAll<HTMLElement>("[data-photograph]")].map((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        id: element.dataset.photograph ?? "",
+        left: Math.max(0, rect.left),
+        right: Math.min(document.documentElement.clientWidth, rect.right),
+        top: rect.top + window.scrollY,
+        bottom: rect.bottom + window.scrollY,
+      };
+    });
+    const found: { text: string; photograph: string; colour: string; large: boolean; x: number; y: number; w: number; h: number }[] = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = (node.textContent ?? "").trim();
+      const parent = node.parentElement;
+      if (!text || !parent || parent.closest("dialog, [hidden], .sr-only, script, style, noscript")) continue;
+      const style = getComputedStyle(parent);
+      if (style.visibility === "hidden" || style.display === "none") continue;
+      const size = parseFloat(style.fontSize);
+      const large = size >= 24 || (size >= 18.66 && Number(style.fontWeight) >= 700);
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const rect of range.getClientRects()) {
+        if (rect.width < 2 || rect.height < 2) continue;
+        const line = { x: rect.left, y: rect.top + window.scrollY, w: rect.width, h: rect.height };
+        const over = photographs.find(
+          (p) => line.x < p.right && line.x + line.w > p.left && line.y < p.bottom && line.y + line.h > p.top,
+        );
+        if (over) found.push({ text: text.slice(0, 48), photograph: over.id, colour: style.color, large, ...line });
+      }
+    }
+    return found;
+  });
+
+  // Hide all text, so that the picture of the page shows what lies behind it.
+  const picture = await pictureWithoutText(page);
+
+  return page.evaluate(
+    async ({ picture, lines }) => {
+      const image = new Image();
+      image.src = `data:image/png;base64,${picture}`;
+      await image.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext("2d", { willReadFrequently: true })!;
+      context.drawImage(image, 0, 0);
+      // The picture may have more pixels than the page has CSS pixels.
+      const scale = image.naturalWidth / document.documentElement.clientWidth;
+
+      const channel = (c: number) => {
+        const s = c / 255;
+        return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+      };
+      const luminance = (r: number, g: number, b: number) =>
+        0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+      const read = (value: string) => {
+        const probe = document.createElement("canvas").getContext("2d")!;
+        probe.fillStyle = value;
+        probe.fillRect(0, 0, 1, 1);
+        const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
+        return luminance(r, g, b);
+      };
+
+      return lines.map((line) => {
+        const text = read(line.colour);
+        const required = line.large ? 3 : 4.5;
+        const x = Math.max(0, Math.floor(line.x * scale));
+        const y = Math.max(0, Math.floor(line.y * scale));
+        const w = Math.max(1, Math.min(canvas.width - x, Math.ceil(line.w * scale)));
+        const h = Math.max(1, Math.min(canvas.height - y, Math.ceil(line.h * scale)));
+        const { data } = context.getImageData(x, y, w, h);
+        const ratios: number[] = [];
+        for (let i = 0; i < data.length; i += 4) {
+          const behind = luminance(data[i], data[i + 1], data[i + 2]);
+          ratios.push((Math.max(text, behind) + 0.05) / (Math.min(text, behind) + 0.05));
+        }
+        ratios.sort((a, b) => a - b);
+        return {
+          text: line.text,
+          photograph: line.photograph,
+          required,
+          below: ratios.filter((ratio) => ratio < required).length / ratios.length,
+          contrast: Number(ratios[Math.floor(ratios.length * 0.05)].toFixed(2)),
+        };
+      });
+    },
+    { picture, lines },
+  );
+}
+
+/** The lines that fail: more than one pixel in twenty under them is below the requirement. */
+export function failing(lines: MeasuredLine[]): string[] {
+  return lines
+    .filter((line) => line.below > 0.05)
+    .map((line) => `"${line.text}" over ${line.photograph}: ${line.contrast} to 1, needs ${line.required}`);
+}
+
+/** The same page with its text hidden, as one picture, for reading what lies behind the text. */
+export async function pictureWithoutText(page: Page): Promise<string> {
+  const hidden = await page.addStyleTag({
+    content: "*, *::before, *::after { color: transparent !important; text-shadow: none !important; }",
+  });
+  const picture = (await page.screenshot({ fullPage: true, type: "png" })).toString("base64");
+  await hidden.evaluate((element) => (element as Element).remove());
+  return picture;
+}
+
+/**
+ * Where a place of a photograph lands inside its frame, as shares of the
+ * frame's width and height. The place is given as shares of the picture.
+ */
+export async function placeInFrame(frame: Locator, at: { x: number; y: number }) {
+  return frame.evaluate((element, at) => {
+    const img = element.querySelector("img")!;
+    const visible = element.getBoundingClientRect();
+    const box = img.getBoundingClientRect();
+    const [px, py] = getComputedStyle(img).objectPosition.split(" ").map((value) => parseFloat(value) / 100);
+    const scale = Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight);
+    const shown = { w: img.naturalWidth * scale, h: img.naturalHeight * scale };
+    const left = box.left + (box.width - shown.w) * px + at.x * shown.w;
+    const top = box.top + (box.height - shown.h) * py + at.y * shown.h;
+    return { x: (left - visible.left) / visible.width, y: (top - visible.top) / visible.height };
+  }, at);
 }

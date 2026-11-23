@@ -1,10 +1,12 @@
+import { projects } from "@/content/projects";
 import { calls, navigation, site, ui } from "@/content/site";
 import { NavigationBar } from "./navigation-bar";
 
 /**
  * The navigation every page shows: the name as the link to the front page,
  * the entries of design D4, a support link once it has a target, and the
- * Install call to action. It stays at the top while the page scrolls under it.
+ * Install call to action, which on a project page leads to that page's
+ * install instructions. It stays at the top while the page scrolls under it.
  */
 export function Navigation({
   supportUrl = site.supportUrl,
@@ -20,6 +22,9 @@ export function Navigation({
       entries={navigation}
       install={calls.install}
       support={supportUrl ? { label: ui.support.text, href: supportUrl } : null}
+      projectPages={projects
+        .filter((project) => project.page)
+        .map((project) => `/projects/${project.slug}`)}
       labels={{
         navigation: ui.mainNavigation.text,
         menu: ui.menu.text,

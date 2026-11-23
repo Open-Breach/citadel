@@ -29,12 +29,11 @@ test.describe("introduction and mission", () => {
     });
   }
 
-  test("on a desktop screen the first screen ends on the ocean, as on board B", async ({ page }) => {
+  test("on a desktop screen the first screen is as tall as the screen", async ({ page }) => {
     for (const viewport of [{ width: 1440, height: 900 }, { width: 1440, height: 960 }, { width: 1920, height: 1080 }]) {
       await page.setViewportSize(viewport);
       await page.goto("/");
       const first = (await page.locator("main section").first().boundingBox())!;
-      // The ocean is the lowest fifth of the landscape: it is in view.
       expect(first.height).toBeLessThanOrEqual(viewport.height + 8);
       const card = page.locator("main section").first().locator("article");
       expect(await isInViewport(card)).toBe(true);
