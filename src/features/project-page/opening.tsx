@@ -89,15 +89,20 @@ export function Opening({ project, page }: { project: Project; page: ProjectPage
         The opening ends on the sea stack, on every project page. It fades in
         from the pale ground, the stack stands right of the middle with its
         base and the waterline in view, and no text lies over it.
+
+        On a wide screen the picture is shown a little larger than the page
+        and held at its right edge, so that the frame holds the stack and the
+        small rocks before it. The cliff on the left of the photograph is out
+        of focus in the file and stays outside the frame.
       */}
       <Photograph
         id="seaStack"
         fadeIn
-        sizes="(max-width: 640px) 170vw, 100vw"
-        className="relative h-[max(41.7vw,17rem)] [--fade-end:42%]"
-        // The frame shows the picture from 14 to 69 per cent of its height: the stack
-        // with its base and the waterline, and the cliff on the left where there is room.
-        boxClassName="absolute inset-x-0 top-[-25.6%] h-[183%]"
+        sizes="(max-width: 640px) 170vw, (max-width: 1024px) 100vw, 128vw"
+        className="relative h-[max(48vw,21rem)] [--fade-end:19%] lg:h-[56.5vw] lg:[--fade-end:14%]"
+        // Narrow: the picture from 6 to 69 per cent of its height.
+        // Wide: 1.28 times the page's width, from 10 to 68 per cent of its height.
+        boxClassName="absolute inset-x-0 top-[-9.5%] h-[158.7%] lg:right-0 lg:left-auto lg:top-[-17.2%] lg:h-[172.4%] lg:w-[128%]"
         imageClassName="object-[82%_50%]"
       />
     </section>

@@ -21,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-svh flex-col">
         <a
           href="#content"
-          className="bg-basalt text-mist rounded-control sr-only z-50 px-4 py-3 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-3 focus-visible:left-3"
+          className="text-basalt rounded-control border-basalt sr-only z-50 border bg-white px-4 py-3 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-3 focus-visible:left-3"
         >
           {ui.skipToContent.text}
         </a>

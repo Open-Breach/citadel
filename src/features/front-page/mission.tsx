@@ -17,8 +17,8 @@ export function Mission({ content }: { content: FrontPage["mission"] }) {
     <section
       id="mission"
       aria-labelledby="mission-heading"
-      // At least as tall as the photograph, so that all of its fade lies inside the section.
-      className="relative isolate min-h-[calc(max(56.25vw,26rem)+4rem)] overflow-hidden pt-20 lg:pt-32"
+      // At least as tall as the photograph, so that its fade starts at the top of the section.
+      className="relative isolate min-h-[max(56.25vw,26rem)] overflow-hidden pt-20 lg:pt-32"
     >
       <Photograph
         id="rocksInFog"

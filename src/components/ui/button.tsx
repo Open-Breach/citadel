@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SectionLink } from "@/components/ui/section-link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
@@ -44,11 +44,11 @@ export function Button({
   children: ReactNode;
 }) {
   const classes = buttonClasses(variant, size, className);
-  if (href.startsWith("/")) {
+  if (href.startsWith("/") || href.startsWith("#")) {
     return (
-      <Link href={href} className={classes}>
+      <SectionLink href={href} className={classes}>
         {children}
-      </Link>
+      </SectionLink>
     );
   }
   return (

@@ -296,8 +296,13 @@ test.describe("the rocks in fog behind the mission statement", () => {
       expect(Math.round(box.y + box.height)).toBe(Math.round(section.y + section.height));
       // Its top is fully transparent and becomes whole further down: no edge.
       const mask = await styleOf(photograph, "mask-image");
-      expect(mask).toMatch(/^linear-gradient\(rgba\(0, 0, 0, 0\) 0%, rgb\(0, 0, 0\) \d+%\)$/);
-      // Read from the page: the row of pixels just above the photograph and the row at its top are the same.
+      expect(mask).toMatch(/^linear-gradient\(rgba\(0, 0, 0, 0\) /);
+      expect(mask).toMatch(/rgb\(0, 0, 0\) calc\([^)]*\)\)$|rgb\(0, 0, 0\) [\d.]+%\)$/);
+      // Read from the page: at the top of its frame the photograph is not there yet, and it comes in without a step.
+      // Back to the top, so that the navigation, which stays in place, is not in the picture here.
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+      // Where the frame starts in the page, noted before the picture is taken.
+      const top = await photograph.evaluate((e) => Math.round(e.getBoundingClientRect().top + window.scrollY));
       const shot = await pictureWithoutText(page);
       const step = await page.evaluate(
         async ({ shot, y }) => {
@@ -310,13 +315,14 @@ test.describe("the rocks in fog behind the mission statement", () => {
           const context = canvas.getContext("2d")!;
           context.drawImage(image, 0, 0);
           const row = (at: number) => context.getImageData(0, at, canvas.width, 1).data;
-          const above = row(y - 2);
-          const below = row(y + 2);
+          // Two rows inside the top of the photograph's frame: where an edge would be.
+          const above = row(y + 1);
+          const below = row(y + 9);
           let most = 0;
           for (let i = 0; i < above.length; i++) most = Math.max(most, Math.abs(above[i] - below[i]));
           return most;
         },
-        { shot, y: Math.round(box.y + (await page.evaluate(() => window.scrollY))) },
+        { shot, y: top },
       );
       // With the text hidden, the ground changes by no more than a shade across the line.
       expect(step).toBeLessThanOrEqual(3);
@@ -426,7 +432,12 @@ test.describe("the sea stack at the end of the opening of a project page", () =>
         right: (await placeInFrame(stack, { x: 0.92, y: 0.5 })).x,
         waterline: (await placeInFrame(stack, { x: 0.75, y: 0.62 })).y,
       };
-      expect(places.left).toBeGreaterThan(width > 1000 ? 0.5 : 0);
+      expect(places.left).toBeGreaterThan(width > 1000 ? 0.45 : 0);
+      // On a wide screen the out-of-focus cliff, the left quarter of the photograph, stays outside the frame.
+      if (width > 1000) expect((await placeInFrame(stack, { x: 0.22, y: 0.5 })).x).toBeLessThanOrEqual(0.01);
+      // The whole stack stands below the fade: its tip is at 19 per cent of the photograph's height.
+      const fade = (await stack.evaluate((e) => parseFloat(getComputedStyle(e).getPropertyValue("--fade-end")))) / 100;
+      expect((await placeInFrame(stack, { x: 0.75, y: 0.19 })).y).toBeGreaterThanOrEqual(fade);
       expect(places.right).toBeLessThanOrEqual(1);
       expect(places.waterline).toBeGreaterThan(0.5);
       expect(places.waterline).toBeLessThan(0.95);

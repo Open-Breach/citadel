@@ -169,10 +169,15 @@
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass {
-    background-color: color-mix(in srgb, var(--color-white) 66%, transparent);
+    background-color: color-mix(in srgb, var(--color-white) 80%, transparent);
     border-color: color-mix(in srgb, var(--color-white) 78%, transparent);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
-    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(24px) saturate(1.15);
+    backdrop-filter: blur(24px) saturate(1.15);
+  }
+
+  /* The open menu on a narrow screen: nearly solid. */
+  .menu-sheet {
+    background-color: color-mix(in srgb, var(--color-white) 95%, transparent);
   }
 
   .glass-card {
@@ -238,12 +243,25 @@
 
 /*
  * A photograph that fades in from the ground above it: its top is
- * transparent and it is whole from --fade-end down, so it has no edge.
- * The mask hides the picture; it does not soften it.
+ * transparent and it is whole from --fade-end down. The ramp is eased at
+ * both ends, so the fade has no line where it starts and none where it
+ * ends. The mask hides the picture; it does not soften it.
  */
 @utility fade-in-top {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black var(--fade-end, 40%));
-  mask-image: linear-gradient(to bottom, transparent 0%, black var(--fade-end, 40%));
+  --fade-ramp:
+    rgb(0 0 0 / 0) calc(var(--fade-end, 40%) * 0),
+    rgb(0 0 0 / 0.028) calc(var(--fade-end, 40%) * 0.1),
+    rgb(0 0 0 / 0.104) calc(var(--fade-end, 40%) * 0.2),
+    rgb(0 0 0 / 0.216) calc(var(--fade-end, 40%) * 0.3),
+    rgb(0 0 0 / 0.352) calc(var(--fade-end, 40%) * 0.4),
+    rgb(0 0 0 / 0.5) calc(var(--fade-end, 40%) * 0.5),
+    rgb(0 0 0 / 0.648) calc(var(--fade-end, 40%) * 0.6),
+    rgb(0 0 0 / 0.784) calc(var(--fade-end, 40%) * 0.7),
+    rgb(0 0 0 / 0.896) calc(var(--fade-end, 40%) * 0.8),
+    rgb(0 0 0 / 0.972) calc(var(--fade-end, 40%) * 0.9),
+    rgb(0 0 0 / 1) calc(var(--fade-end, 40%) * 1);
+  -webkit-mask-image: linear-gradient(to bottom, var(--fade-ramp));
+  mask-image: linear-gradient(to bottom, var(--fade-ramp));
 }
 
 /* Thin horizontal lines on the water, as on board B. */

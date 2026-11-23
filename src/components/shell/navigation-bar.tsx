@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SectionLink } from "@/components/ui/section-link";
 import { usePathname } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import { buttonClasses } from "@/components/ui/button";
@@ -13,7 +14,7 @@ const entryClasses =
   "text-basalt decoration-stone rounded-sm text-sm underline-offset-[0.4em] hover:underline";
 
 // In the bar a link is as tall as the bar, so that it is easy to hit.
-const inBar = "flex min-h-14 items-center";
+const inBar = "flex min-h-11 items-center";
 
 /**
  * The navigation as one glass panel. On a wide screen the entries stand in
@@ -79,9 +80,9 @@ export function NavigationBar({
         </ul>
 
         <div className="flex items-center gap-2">
-          <Link href={install.href} className={buttonClasses("filled", "sm")}>
+          <SectionLink href={install.href} className={buttonClasses("filled", "sm")}>
             {install.label}
-          </Link>
+          </SectionLink>
           <button
             ref={control}
             type="button"
@@ -99,7 +100,7 @@ export function NavigationBar({
       <div
         id={menuId}
         hidden={!open}
-        className="glass-card rounded-panel animate-fade-in absolute inset-x-0 top-full mt-2 p-2 lg:hidden"
+        className="glass-card menu-sheet rounded-panel animate-fade-in absolute inset-x-0 top-full mt-2 p-2 lg:hidden"
       >
         <ul>
           {allEntries.map((entry) => (
@@ -131,14 +132,14 @@ function NavLink({
   const classes = cn(entryClasses, current && "underline decoration-basalt", className);
   if (entry.href.startsWith("/")) {
     return (
-      <Link
+      <SectionLink
         href={entry.href}
         onClick={onClick}
         aria-current={current ? "page" : undefined}
         className={classes}
       >
         {entry.label}
-      </Link>
+      </SectionLink>
     );
   }
   return (

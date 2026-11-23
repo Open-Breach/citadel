@@ -18,7 +18,7 @@ The landscape photographs of the site are the work of their photographers. They 
 | Basalt columns | `public/images/photographs/basalt-columns.jpg` | Sebastian Spindler | https://unsplash.com/photos/gray-rock-formation-on-gray-sand-during-daytime-ycA729rLQKw | Unsplash License | Resized from 5717 by 3811 to 3840 by 2560 pixels |
 | Rocks in fog | `public/images/photographs/rocks-in-fog.jpg` | Mads Eneqvist | https://unsplash.com/photos/a-body-of-water-w2VxnoRrsjE | Unsplash License | None |
 | Stacks under an amber sky | `public/images/photographs/stacks-amber-sky.jpg` | Leo_Visions | https://unsplash.com/photos/a-group-of-large-rocks-in-the-ocean-oJX5gsIBOag | Unsplash License | Resized from 8369 by 5448 to 3840 by 2500 pixels |
-| Sea stack | `public/images/photographs/sea-stack.jpg` | Joseph Corl | https://unsplash.com/photos/black-sand-beach-with-rock-formations-FV7NJ-bSH6o | Unsplash License | Resized from 4436 by 3378 to 3840 by 2924 pixels; the green of the moss toned down to grey |
+| Sea stack | `public/images/photographs/sea-stack.jpg` | Joseph Corl | https://unsplash.com/photos/black-sand-beach-with-rock-formations-FV7NJ-bSH6o | Unsplash License | Resized from 4436 by 3378 to 3840 by 2924 pixels; the green and ochre of the moss on the dark rock toned down to grey |
 
 The same facts are in `src/content/images.ts`, which the site reads, and the footer of every page credits the four photographers. Two more of the photographs appear in the reference images under `docs/design/round-two/`.
 

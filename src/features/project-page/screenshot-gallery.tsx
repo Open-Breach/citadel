@@ -34,7 +34,12 @@ export function ScreenshotGallery({
   // that was opened again in the meantime.
   const [current, setCurrent] = useState<GalleryItem | null>(null);
 
-  function open(item: GalleryItem) {
+  // The file the page already shows for the screenshot: it fills the larger
+  // view at once, and the larger file takes its place when it arrives.
+  const [preview, setPreview] = useState<string>();
+
+  function open(item: GalleryItem, shown?: string) {
+    setPreview(shown);
     // The view is filled before it opens, and the focus goes to Close every time.
     flushSync(() => setCurrent(item));
     dialog.current?.showModal();
@@ -49,7 +54,7 @@ export function ScreenshotGallery({
             <figure className="flex h-full flex-col">
               <button
                 type="button"
-                onClick={() => open(item)}
+                onClick={(event) => open(item, event.currentTarget.querySelector("img")?.currentSrc)}
                 className="group border-stone/40 hover:border-stone relative block cursor-zoom-in overflow-hidden rounded-xl border transition-[color,background-color,border-color] duration-200"
               >
                 <Image
@@ -60,7 +65,7 @@ export function ScreenshotGallery({
                   sizes={index === 0 ? "(min-width: 1024px) 62vw, 100vw" : "(min-width: 1024px) 31vw, 100vw"}
                   className="h-auto w-full"
                 />
-                <span className="bg-basalt text-mist rounded-control absolute right-3 bottom-3 flex size-8 items-center justify-center opacity-80 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="bg-basalt text-mist ring-mist/70 rounded-control absolute right-3 bottom-3 flex size-8 items-center justify-center opacity-80 ring-1 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                   <ExpandIcon />
                 </span>
                 <span className="sr-only">{labels.viewLarger}</span>
@@ -97,6 +102,7 @@ export function ScreenshotGallery({
               width={current.width}
               height={current.height}
               sizes="100vw"
+              style={preview ? { backgroundImage: `url("${preview}")`, backgroundSize: "100% 100%" } : undefined}
               className="border-stone/40 h-auto w-full rounded-lg border"
             />
             <div className="flex items-center justify-between gap-4 px-1 pt-2 sm:pt-3">

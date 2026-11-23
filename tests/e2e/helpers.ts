@@ -320,7 +320,9 @@ export function failing(lines: MeasuredLine[]): string[] {
 /** The same page with its text hidden, as one picture, for reading what lies behind the text. */
 export async function pictureWithoutText(page: Page): Promise<string> {
   const hidden = await page.addStyleTag({
-    content: "*, *::before, *::after { color: transparent !important; text-shadow: none !important; }",
+    // Transitions are off, so that no text is caught half-hidden.
+    content:
+      "*, *::before, *::after { color: transparent !important; text-shadow: none !important; transition: none !important; }",
   });
   const picture = (await page.screenshot({ fullPage: true, type: "png" })).toString("base64");
   await hidden.evaluate((element) => (element as Element).remove());

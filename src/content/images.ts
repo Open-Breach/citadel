@@ -64,7 +64,7 @@ export const images = {
     author: "Joseph Corl",
     licence: "Unsplash License",
     changes:
-      "Resized from 4436 by 3378 to 3840 by 2924 pixels. The green of the moss on the stack and on the cliff is toned down to grey.",
+      "Resized from 4436 by 3378 to 3840 by 2924 pixels. The green of the moss on the stack and on the cliff, and the ochre it leaves on the dark rock, are toned down to grey. The sky is untouched.",
     coveredByRepositoryLicence: false,
     tone: "haze",
     usedOn: ["Every project page"],
