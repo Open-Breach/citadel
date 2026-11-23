@@ -1,5 +1,23 @@
 schema: spec-driven
 
+context: |
+  Citadel is the website of Open-Breach (openbreach.dev): a Next.js site that
+  presents the organisation and its five projects, Rick, Meeseeks, Gossip,
+  Trebuchet and Butterbot, as products.
+  This repository is public. Never commit a secret, a certificate, a
+  private key, or the name of a vault or of a certificate in it. Deployment
+  configuration lives outside this repository.
+  The site is built in rounds, one OpenSpec change per round. Serge looks at
+  each round running before the next change is applied. Do not start a change
+  he has not asked for, and stop when the change you were asked for is done.
+  In design documents, "decided" marks a decision of Serge's: do not reopen
+  it, raise a problem with it instead. "Proposed" marks a suggestion that is
+  waiting for his yes.
+  Design work goes through the Impeccable skill (.claude/skills/impeccable),
+  and the brief in the design documents wins over the skill's own taste.
+  Package versions and framework APIs named in design documents are a
+  snapshot. Read node_modules/next/dist/docs before writing Next.js code.
+
 # Project context (optional)
 # Add only constraints that should guide OpenSpec artifacts and workflows.
 # Include constraints an agent cannot infer by reading the code.
