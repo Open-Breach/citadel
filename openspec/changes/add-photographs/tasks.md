@@ -35,7 +35,7 @@
 
 ## 5. Review
 
-- [ ] 5.1 Run Impeccable's critique and audit on the front page and the Rick page, fix what they find, and note what stays and why (design D13); verify the detector reports nothing new on the sources
-- [ ] 5.2 Let Impeccable's documenter bring `DESIGN.md` up to date; verify it describes the photographs, the first screen over a photograph and the label form
-- [ ] 5.3 Run `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run placeholders` and `npm run test:e2e`; verify all pass and that the placeholder list no longer names a landscape
+- [x] 5.1 Run Impeccable's critique and audit on the front page and the Rick page, fix what they find, and note what stays and why (design D13); verify the detector reports nothing new on the sources
+- [x] 5.2 Let Impeccable's documenter bring `DESIGN.md` up to date; verify it describes the photographs, the first screen over a photograph and the label form
+- [x] 5.3 Run `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run placeholders` and `npm run test:e2e`; verify all pass and that the placeholder list no longer names a landscape
 - [ ] 5.4 Put screenshots of the front page and the Rick page at 1440 and 390 pixels wide, and of the first screen at 1440 by 900, into `docs/review/round-two/`, open one pull request from the branch `round-two`, and do not merge it; verify the pull request shows the screenshots and lists every departure from a proposed point and every question for Serge

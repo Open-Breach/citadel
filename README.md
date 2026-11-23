@@ -65,7 +65,7 @@ The layout lives in `src/app` (the routes), `src/components` (the shell and the 
 
 ## Photographs
 
-The four photographs are in `public/images/photographs/`, each at most 3840 pixels wide. The site resizes them for the screen that asks and delivers AVIF or WebP. The first request for a size takes a few seconds to encode; after that it comes from the cache under `.next/cache/images`. A part of a photograph is chosen for its place in the page, by placement, and never by cutting the file. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) names the photographers and the licence.
+The four photographs are in `public/images/photographs/`, each at most 3840 pixels wide. The site resizes them for the screen that asks and delivers AVIF or WebP. The first request for a size takes a few seconds to encode; after that it comes from the cache under `.next/cache/images`, which keeps a size for 31 days. When a photograph is replaced under the same name, delete that folder, or the site goes on delivering the old picture. A part of a photograph is chosen for its place in the page, by placement, and never by cutting the file. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) names the photographers and the licence.
 
 ## Design
 

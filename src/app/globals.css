@@ -264,30 +264,6 @@
   mask-image: linear-gradient(to bottom, var(--fade-ramp));
 }
 
-/* Thin horizontal lines on the water, as on board B. */
-@utility water-lines {
-  background-image:
-    linear-gradient(
-      to right,
-      transparent 6%,
-      color-mix(in srgb, var(--color-fog) 30%, transparent) 6% 34%,
-      transparent 34%
-    ),
-    linear-gradient(
-      to right,
-      transparent 52%,
-      color-mix(in srgb, var(--color-fog) 24%, transparent) 52% 86%,
-      transparent 86%
-    );
-  background-size:
-    100% 1px,
-    100% 1px;
-  background-position:
-    0 1.5rem,
-    0 3rem;
-  background-repeat: no-repeat;
-}
-
 /*
  * Motion. Everything that moves is written inside this block, so a visitor
  * who asks for reduced motion gets short fades and nothing else: nothing
