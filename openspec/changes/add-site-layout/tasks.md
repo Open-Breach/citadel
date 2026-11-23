@@ -6,11 +6,11 @@
 - [x] 1.2 Remove the scaffold's demo page, demo images and favicon, and add the `typecheck` script; verify `npm run build`, `npm run lint` and `npm run typecheck` succeed
 - [x] 1.3 Replace the template's Google font loading with the `geist` package (design D2); verify `npm run build` succeeds with the network switched off after `npm install`
 - [x] 1.4 Set up `npm test` with Node's test runner and `npm run test:e2e` with Playwright against `next start` (design D10), each with one trivial test; verify both commands pass
-- [ ] 1.5 Add to the existing README how to install, start and check the site, where a page's content is changed, and that it runs over plain HTTP on localhost in this round; verify by following it on a clean checkout that `http://localhost:3000` answers
+- [x] 1.5 Add to the existing README how to install, start and check the site, where a page's content is changed, and that it runs over plain HTTP on localhost in this round; verify by following it on a clean checkout that `http://localhost:3000` answers
 
 ## 2. Design system
 
-- [ ] 2.1 Run `/impeccable init` with design D6 to D8 as the brief and board B (`docs/design/mood-board-b.png`) as the chosen direction; verify `PRODUCT.md` and `DESIGN.md` exist, name signal amber as the one accent, and contradict no decided point of design D6
+- [x] 2.1 Run `/impeccable init` with design D6 to D8 as the brief and board B (`docs/design/mood-board-b.png`) as the chosen direction; verify `PRODUCT.md` and `DESIGN.md` exist, name signal amber as the one accent, and contradict no decided point of design D6
 - [ ] 2.2 Define the tokens of design D7 as Tailwind theme values in the global stylesheet, including the darker amber for text; verify with a Node test that every pair used for text meets 4.5 to 1 and that no component file holds a colour value of its own
 - [ ] 2.3 Build the components: glass panel with its fallback surface, button (filled amber and outlined), chip, badge, section label, and the ruled line with tick marks; verify on a scratch page that each matches board B at 1440 pixels wide and that the focus mark is visible on every control
 - [ ] 2.4 Draw the stand-in landscape as an SVG in the palette (design D5) and add `src/content/images.ts` with its record; verify with a Node test that every image file under the site's image folder has a record and that a file without one fails the test
