@@ -4,7 +4,9 @@ Citadel is the website of [Open-Breach](https://github.com/Open-Breach), at open
 
 ## Status
 
-Design stage. There is no code yet. The site is specified as [OpenSpec](https://github.com/Fission-AI/OpenSpec) changes and is built in rounds, one change per round. Serge looks at each round running before the next one starts.
+Round one. The site is specified as [OpenSpec](https://github.com/Fission-AI/OpenSpec) changes and is built in rounds, one change per round. Serge looks at each round running before the next one starts.
+
+In this round the site runs over plain HTTP on localhost only. It has the front page and the Rick page; the other pages say that they are still to come. Texts, imagery, releases and badge values are placeholders.
 
 | Change | What it is | State |
 | --- | --- | --- |
@@ -13,6 +15,50 @@ Design stage. There is no code yet. The site is specified as [OpenSpec](https://
 | [add-remaining-pages](openspec/changes/add-remaining-pages/) | The other four project pages, Community, Charter, data from GitHub, the real photographs | Provisional, revised after the review of round one |
 
 Each change has a proposal (what and why), a design (how, and what is still open), specs (the behaviour, one file per capability) and tasks (the plan).
+
+## Running the site
+
+You need [Node.js](https://nodejs.org) 22 or newer, with npm. Nothing else: no account, no vault, no certificate and no secret.
+
+```bash
+npm install
+npm run dev
+```
+
+The site is then at <http://localhost:3000>, over plain HTTP. Changes to the source show in the browser without a restart. HTTPS comes with the change `add-https-start-up`.
+
+## Checking the site
+
+| Command | What it does |
+| --- | --- |
+| `npm run build` | Builds the site for production |
+| `npm run lint` | Runs ESLint |
+| `npm run typecheck` | Checks the types |
+| `npm test` | Runs the checks that need no browser: the content, the colour contrast, the image records |
+| `npm run placeholders` | Lists every placeholder text and image, with the page that uses it |
+| `npm run test:e2e` | Builds the site and runs the browser tests against it on port 3100 |
+
+After `npm install`, the first five need no network. The browser tests need Playwright's browser, once:
+
+```bash
+npx playwright install chromium
+```
+
+## Changing what a page says
+
+Everything a page says is data in `src/content`, not in the components:
+
+| File | Holds |
+| --- | --- |
+| `src/content/site.ts` | The texts of the front page, the navigation, the footer and the support link |
+| `src/content/projects.ts` | The five projects, and for a project with a page everything its page says |
+| `src/content/releases.ts` | The release entries of the front page |
+| `src/content/team.ts` | The team |
+| `src/content/images.ts` | The record of every image: its source, its author and its licence |
+
+A text or an image that is still a placeholder is marked as one in these files. Remove the marker when the content is final; `npm run placeholders` then stops listing it.
+
+The layout lives in `src/app` (the routes), `src/components` (the shell and the design system) and `src/features` (the sections of the front page and of a project page).
 
 ## Design
 

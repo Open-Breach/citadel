@@ -2,10 +2,10 @@
 
 ## 1. Project frame
 
-- [ ] 1.1 Scaffold the Next.js project in a temporary folder with the options of design D1 and move it into the repository root, keeping everything design D1 lists and adding the scaffold's block to the end of the existing `AGENTS.md`; verify `git status` shows none of the kept files removed, and only `.gitignore` and `AGENTS.md` among them changed, each by gaining the scaffold's part
-- [ ] 1.2 Remove the scaffold's demo page, demo images and favicon, and add the `typecheck` script; verify `npm run build`, `npm run lint` and `npm run typecheck` succeed
-- [ ] 1.3 Replace the template's Google font loading with the `geist` package (design D2); verify `npm run build` succeeds with the network switched off after `npm install`
-- [ ] 1.4 Set up `npm test` with Node's test runner and `npm run test:e2e` with Playwright against `next start` (design D10), each with one trivial test; verify both commands pass
+- [x] 1.1 Scaffold the Next.js project in a temporary folder with the options of design D1 and move it into the repository root, keeping everything design D1 lists and adding the scaffold's block to the end of the existing `AGENTS.md`; verify `git status` shows none of the kept files removed, and only `.gitignore` and `AGENTS.md` among them changed, each by gaining the scaffold's part
+- [x] 1.2 Remove the scaffold's demo page, demo images and favicon, and add the `typecheck` script; verify `npm run build`, `npm run lint` and `npm run typecheck` succeed
+- [x] 1.3 Replace the template's Google font loading with the `geist` package (design D2); verify `npm run build` succeeds with the network switched off after `npm install`
+- [x] 1.4 Set up `npm test` with Node's test runner and `npm run test:e2e` with Playwright against `next start` (design D10), each with one trivial test; verify both commands pass
 - [ ] 1.5 Add to the existing README how to install, start and check the site, where a page's content is changed, and that it runs over plain HTTP on localhost in this round; verify by following it on a clean checkout that `http://localhost:3000` answers
 
 ## 2. Design system
