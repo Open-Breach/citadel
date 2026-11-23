@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 340" preserveAspectRatio="xMidYMax slice">
+  <title>Stand-in landscape</title>
+  <desc>A drawn stand-in for a photograph: three ridges of stone over a band of ocean.</desc>
+  <defs>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#A1A7AC"/>
+      <stop offset="1" stop-color="#B6BCC1"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5B6167"/>
+      <stop offset="1" stop-color="#70767C"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E2124"/>
+      <stop offset="1" stop-color="#2B2F33"/>
+    </linearGradient>
+  </defs>
+  <!-- Far ridge, light grey -->
+  <path fill="url(#far)" d="M0 96 L96 68 L155 50 L214 61 L302 74 L372 47 L408 40 L464 8 L512 27 L560 37 L619 62 L690 45 L776 25 L842 48 L900 77 L968 94 L1083 122 L1170 98 L1250 75 L1322 62 L1378 48 L1440 35 V340 H0 Z"/>
+  <!-- Middle ridge, mid grey -->
+  <path fill="url(#mid)" d="M0 154 L84 133 L138 126 L197 112 L262 125 L318 138 L380 145 L452 120 L498 110 L560 89 L618 107 L699 137 L770 122 L836 115 L914 100 L986 122 L1083 150 L1168 131 L1266 111 L1340 120 L1440 134 V340 H0 Z"/>
+  <!-- Near ridge, black stone -->
+  <path fill="url(#near)" d="M0 218 L92 203 L180 194 L250 200 L338 210 L420 192 L520 176 L600 186 L676 198 L759 210 L860 202 L998 194 L1090 205 L1202 218 L1300 210 L1440 199 V340 H0 Z"/>
+  <!-- Ocean -->
+  <rect y="264" width="1440" height="76" fill="#3E4A55"/>
+  <g stroke="#8A9096" stroke-opacity="0.55" stroke-width="1">
+    <path d="M120 278.5 H539"/>
+    <path d="M699 294.5 H1222"/>
+    <path d="M300 310.5 H599"/>
+  </g>
+</svg>

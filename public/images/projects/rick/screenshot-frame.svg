@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2520 1380">
+  <title>Stand-in screenshot</title>
+  <desc>An empty window frame in the proportions of a desktop window, standing in for a screenshot that is still to be chosen.</desc>
+  <rect width="2520" height="1380" fill="#F5F7F8"/>
+  <!-- Title bar -->
+  <rect width="2520" height="96" fill="#DDE2E5"/>
+  <path d="M0 96.5 H2520" stroke="#8A9096" stroke-opacity="0.6" stroke-width="2"/>
+  <g fill="none" stroke="#8A9096" stroke-width="3">
+    <path d="M2298 48 H2330"/>
+    <rect x="2370" y="33" width="30" height="30"/>
+    <path d="M2442 33 L2472 63 M2472 33 L2442 63"/>
+  </g>
+  <!-- Sidebar and two panes -->
+  <g stroke="#8A9096" stroke-opacity="0.6" stroke-width="2">
+    <path d="M430 96 V1380"/>
+    <path d="M1475 96 V1380"/>
+  </g>
+  <!-- Measure marks in the middle of the frame -->
+  <g stroke="#8A9096" stroke-width="2">
+    <path d="M1090 738 H1430"/>
+    <path d="M1090 738 V758 M1175 738 V750 M1260 738 V750 M1345 738 V750 M1430 738 V758"/>
+  </g>
+</svg>
