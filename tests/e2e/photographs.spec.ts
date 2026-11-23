@@ -33,6 +33,31 @@ test.describe("the chosen photographs", () => {
     ]);
   });
 
+  test("every photograph covers its frame", async ({ page }) => {
+    for (const [width, height] of [[1440, 900], [390, 844]]) {
+      await page.setViewportSize({ width, height });
+      for (const path of ["/", "/projects/rick"]) {
+        await page.goto(path);
+        await scrollThrough(page);
+        const gaps = await page.locator("[data-photograph]").evaluateAll((frames) =>
+          frames
+            .filter((frame) => {
+              const visible = frame.getBoundingClientRect();
+              const picture = frame.querySelector("img")!.getBoundingClientRect();
+              return (
+                picture.left > visible.left + 1 ||
+                picture.top > visible.top + 1 ||
+                picture.right < visible.right - 1 ||
+                picture.bottom < visible.bottom - 1
+              );
+            })
+            .map((frame) => (frame as HTMLElement).dataset.photograph),
+        );
+        expect(gaps, `${path} at ${width}`).toEqual([]);
+      }
+    }
+  });
+
   test("no drawn landscape is shown on any page", async ({ page }) => {
     for (const path of ["/", "/projects/rick", "/community", "/no-such-page"]) {
       await page.goto(path);
