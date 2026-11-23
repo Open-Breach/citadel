@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "node --test \"tests/unit/**/*.test.ts\"",
-    "test:e2e": "next build && playwright test"
+    "test:e2e": "playwright test",
+    "placeholders": "node scripts/placeholders.ts"
   },
   "dependencies": {
     "geist": "^1.9.2",
@@ -30,5 +31,6 @@
   },
   "engines": {
     "node": ">=22"
-  }
+  },
+  "type": "module"
 }

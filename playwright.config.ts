@@ -22,8 +22,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npx next start --port ${port}`,
+    // The tests build the site with its test pages, into a folder of their
+    // own (see next.config.ts), and serve that build.
+    command: `npx next build && npx next start --port ${port}`,
+    env: { CITADEL_FIXTURES: "1" },
     url: baseURL,
     reuseExistingServer: false,
+    timeout: 300_000,
   },
 });

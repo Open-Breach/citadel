@@ -1,6 +1,313 @@
-@import "tailwindcss";
+/* Class names are read from src only: a class named in a test is no class of the site. */
+@import "tailwindcss" source("..");
 
-@theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/*
+ * The tokens of the design system (design D7, board B).
+ * Every colour of the site is defined here, once. Components use the tokens
+ * through their utility classes and never hold a colour value of their own;
+ * tests/unit/tokens.test.ts checks both that and the contrast of every pair
+ * used for text.
+ */
+@theme {
+  /* Only these colours exist. Tailwind's own palette is switched off. */
+  --color-*: initial;
+
+  /* From board B */
+  --color-mist: #f5f7f8; /* Background */
+  --color-stone: #8a9096; /* Lines and large text */
+  --color-basalt: #1e2124; /* Text, dark surfaces */
+  --color-ocean: #3e4a55; /* Secondary text, dark panels */
+  --color-amber: #ff8a1f; /* Fills of the calls to action */
+
+  /* Derived from them */
+  --color-amber-deep: #a04a00; /* Amber as text: small labels, links that lead on */
+  --color-amber-bright: #ff9a3d; /* An amber fill under the pointer */
+  --color-amber-pressed: #f07a0c; /* An amber fill while pressed */
+  --color-haze: #dde2e5; /* The background where it darkens towards the land */
+  --color-fog: #c3c9ce; /* Secondary text on Ocean and Basalt */
+  --color-white: #ffffff; /* The base of the glass panels */
+
+  /* Type */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --text-display: clamp(2.25rem, 1.136rem + 4.571vw, 5.25rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 650;
+
+  --text-title: clamp(1.75rem, 1.38rem + 1.52vw, 2.75rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.025em;
+  --text-title--font-weight: 600;
+
+  --text-statement: clamp(1.375rem, 1.05rem + 1.33vw, 2.25rem);
+  --text-statement--line-height: 1.25;
+  --text-statement--letter-spacing: -0.02em;
+  --text-statement--font-weight: 500;
+
+  --text-lead: clamp(1.0625rem, 0.97rem + 0.38vw, 1.3125rem);
+  --text-lead--line-height: 1.5;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.14em;
+  --text-label--font-weight: 500;
+
+  /* Shape */
+  --radius-control: 0.625rem;
+  --radius-panel: 1rem;
+  --radius-card: 1.25rem;
+
+  /* Depth: one soft, offset shadow under glass. */
+  --shadow-glass:
+    0 1px 1px
+      color-mix(in srgb, var(--color-basalt) 4%, transparent),
+    0 18px 40px -18px color-mix(in srgb, var(--color-basalt) 22%, transparent);
+  --shadow-window:
+    0 1px 2px color-mix(in srgb, var(--color-basalt) 8%, transparent),
+    0 32px 64px -28px color-mix(in srgb, var(--color-basalt) 34%, transparent);
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-fade-in: fade-in 500ms var(--ease-out-expo) backwards;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-mist);
+    color: var(--color-basalt);
+    font-family: var(--font-sans);
+    scroll-padding-top: 6.5rem;
+    scrollbar-color: var(--color-stone) var(--color-mist);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100svh;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-amber) 38%, var(--color-mist));
+    color: var(--color-basalt);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* The focus mark: a Basalt ring, 15 to 1 on Mist and 6.9 to 1 on Amber. */
+  :focus-visible {
+    outline: 2px solid var(--color-basalt);
+    outline-offset: 3px;
+  }
+
+  /* On Ocean and Basalt the ring is Mist. */
+  .on-dark :focus-visible {
+    outline-color: var(--color-mist);
+  }
+
+  input,
+  textarea {
+    caret-color: var(--color-amber-deep);
+  }
+
+  dialog {
+    color: inherit;
+  }
+}
+
+/*
+ * Glass. The base is the fallback of the design-system spec: a pale surface
+ * on which text stays readable. Where the browser can soften what lies
+ * behind, the block below turns the surface translucent.
+ *
+ * glass        carries Basalt text only (the navigation).
+ * glass-card   carries secondary and amber text too, so it stays milkier:
+ *              over the darkest part of the landscape that text still has
+ *              4.5 to 1.
+ */
+@utility glass {
+  background-color: color-mix(in srgb, var(--color-white) 94%, var(--color-mist));
+  border: 1px solid color-mix(in srgb, var(--color-stone) 22%, transparent);
+  box-shadow: var(--shadow-glass);
+}
+
+@utility glass-card {
+  background-color: color-mix(in srgb, var(--color-white) 94%, var(--color-mist));
+  border: 1px solid color-mix(in srgb, var(--color-stone) 22%, transparent);
+  box-shadow: var(--shadow-glass);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: color-mix(in srgb, var(--color-white) 66%, transparent);
+    border-color: color-mix(in srgb, var(--color-white) 78%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    backdrop-filter: blur(18px) saturate(1.15);
+  }
+
+  .glass-card {
+    background-color: color-mix(in srgb, var(--color-white) 88%, transparent);
+    border-color: color-mix(in srgb, var(--color-white) 90%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(1.15);
+    backdrop-filter: blur(22px) saturate(1.15);
+  }
+}
+
+/*
+ * The instrument scale: a ruled line with tick marks hanging from it,
+ * one tick every 3.75rem and a longer one at the start.
+ */
+@utility scale-rule {
+  position: relative;
+  height: 0.5rem;
+  border-top: 1px solid var(--color-stone);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-stone) 0 1px,
+    transparent 1px 3.75rem
+  );
+  background-size: 100% 0.3125rem;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 1px;
+    height: 0.5rem;
+    background-color: var(--color-stone);
+  }
+}
+
+/* On Ocean and Basalt the scale is drawn in Fog, thinned. */
+@utility scale-rule-on-dark {
+  border-top-color: color-mix(in srgb, var(--color-fog) 55%, transparent);
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-fog) 55%, transparent) 0 1px,
+    transparent 1px 3.75rem
+  );
+
+  &::before {
+    background-color: color-mix(in srgb, var(--color-fog) 55%, transparent);
+  }
+}
+
+/* Thin horizontal lines on the water, as on board B. */
+@utility water-lines {
+  background-image:
+    linear-gradient(
+      to right,
+      transparent 6%,
+      color-mix(in srgb, var(--color-fog) 30%, transparent) 6% 34%,
+      transparent 34%
+    ),
+    linear-gradient(
+      to right,
+      transparent 52%,
+      color-mix(in srgb, var(--color-fog) 24%, transparent) 52% 86%,
+      transparent 86%
+    );
+  background-size:
+    100% 1px,
+    100% 1px;
+  background-position:
+    0 1.5rem,
+    0 3rem;
+  background-repeat: no-repeat;
+}
+
+/*
+ * Motion. Everything that moves is written inside this block, so a visitor
+ * who asks for reduced motion gets short fades and nothing else: nothing
+ * slides, scales, drifts or moves with scrolling.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* The signature: the instrument scale draws itself in, left to right. */
+  .scale-rule-draw {
+    animation: scale-draw 1100ms var(--ease-out-expo) 150ms backwards;
+  }
+
+  @keyframes scale-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* The first screen composes itself once: small lifts, in reading order. */
+  .rise {
+    animation: rise 700ms var(--ease-out-expo) backwards;
+    animation-delay: calc(var(--rise-step, 0) * 70ms);
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+
+  /* The landscape drifts slightly against the scroll. */
+  @supports (animation-timeline: view()) {
+    .drift {
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translateY(-2.5%) scale(1.05);
+      }
+      to {
+        transform: translateY(2.5%) scale(1.05);
+      }
+    }
+  }
+
+  /* An arrow that leads on moves a little when its link is under the pointer. */
+  .lead-on-arrow {
+    transition: transform 250ms var(--ease-out-expo);
+  }
+
+  .lead-on:hover .lead-on-arrow,
+  .lead-on:focus-visible .lead-on-arrow,
+  .lead-on:has(:focus-visible) .lead-on-arrow {
+    transform: translateX(0.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scale-rule-draw,
+  .rise {
+    animation: fade-in 300ms ease-out backwards;
+  }
 }

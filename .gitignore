@@ -64,6 +64,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# the build for the browser tests
+/.next-e2e/
+
 # playwright
 /test-results/
 /playwright-report/
