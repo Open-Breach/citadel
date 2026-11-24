@@ -67,6 +67,23 @@ describe("Rick's texts", () => {
     }
   });
 
+  test("show a command or a download only for a way of installing that works today", () => {
+    const steps = page.install.flatMap((instructions) => instructions.steps);
+    const later = steps.filter((step) => step.stillToCome);
+    assert.equal(later.length, 1, "the package repository is named as still to come");
+    assert.match(later[0].text.text, /package repository/);
+    assert.equal(later[0].command, undefined);
+    assert.equal(later[0].downloads, undefined);
+    for (const step of steps) {
+      assert.doesNotMatch(step.command?.text ?? "", /https?:\/\//, "no command reaches for a host");
+      for (const download of step.downloads ?? []) {
+        assert.match(download.url, /^https:\/\/github\.com\/Open-Breach\/rick\/releases\/download\/v0\.6\.0\/rick-0\.6\.0-/);
+        assert.notEqual(download.placeholder, true, "checked against the latest release");
+      }
+    }
+    assert.equal(page.badges.version, "0.6.0");
+  });
+
   test("show at least three screenshots, each with a caption", () => {
     assert.ok(page.screenshots.length >= 3);
     assert.ok(page.screenshots.every((screenshot) => isMarked(screenshot.caption)));

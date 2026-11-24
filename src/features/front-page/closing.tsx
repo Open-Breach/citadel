@@ -4,7 +4,7 @@ import { ScaleRule } from "@/components/ui/scale-rule";
 import { calls, type FrontPage } from "@/content/site";
 import { Text } from "@/components/ui/text";
 
-/** The two calls to action again, before the page ends at the shore. */
+/** The two calls to action again, before the page ends at the stacks. */
 export function Closing({ content }: { content: FrontPage["closing"] }) {
   return (
     <section

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-23T04:53:07Z",
+  "generatedAt": "2026-11-23T20:24:20Z",
   "title": "Design System: Citadel",
   "extensions": {
     "colorMeta": {
@@ -182,7 +182,7 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "A small signal in spaced capitals, in Deep Amber."
+        "purpose": "A small signal in spaced capitals, in the colour of the text beside it, with a small amber square before it."
       },
       "reading": {
         "displayName": "Reading",
@@ -238,11 +238,6 @@
         "purpose": "The instrument scale draws itself in on load."
       },
       {
-        "name": "drift",
-        "value": "translateY(-2.5%) to translateY(2.5%) at scale(1.05), on the view timeline",
-        "purpose": "The landscape drifts slightly against the scroll, where the browser supports it."
-      },
-      {
         "name": "lead-on-arrow",
         "value": "translateX(0.25rem) over 250ms ease-out-expo",
         "purpose": "The arrow of a link that leads on, under the pointer or with focus."
@@ -260,7 +255,12 @@
       {
         "name": "reduced-motion",
         "value": "fade-in 300ms ease-out",
-        "purpose": "Replaces rise and scale-draw; drift, the arrow and smooth scrolling are off."
+        "purpose": "Replaces rise and scale-draw; the arrow and smooth scrolling are off."
+      },
+      {
+        "name": "fade-in-top",
+        "value": "mask-image: linear-gradient(to bottom, eleven eased stops from transparent at 0 to opaque at --fade-end, 40% by default)",
+        "purpose": "Not a movement: the mask through which a photograph passes into the ground above it with no edge."
       }
     ],
     "breakpoints": [
@@ -308,6 +308,14 @@
       "css": ".ds-btn { font-family: var(--font-sans); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.5rem 1.25rem; border-radius: var(--radius-control); font-size: var(--text-control); font-weight: 500; text-decoration: none; cursor: pointer; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-btn:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-btn-outlined { border: 1px solid var(--color-basalt); color: var(--color-basalt); background-color: transparent; } .ds-btn-outlined:hover { background-color: var(--color-basalt); color: var(--color-mist); } .ds-btn-outlined:active { background-color: var(--color-ocean); color: var(--color-mist); }"
     },
     {
+      "name": "Outlined Light Button",
+      "kind": "button",
+      "refersTo": "button-outlined-light",
+      "description": "The second action over the dark rock of the first screen: a Mist outline that inverts under the pointer.",
+      "html": "<div class=\"ds-rock\"><a class=\"ds-btn ds-btn-outlined-light\" href=\"#\">Join the discussion</a></div>",
+      "css": ".ds-btn { font-family: var(--font-sans); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.5rem 1.25rem; border-radius: var(--radius-control); font-size: var(--text-control); font-weight: 500; text-decoration: none; cursor: pointer; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-rock { display: inline-block; padding: 1.5rem; background-color: var(--color-basalt); } .ds-btn-outlined-light { border: 1px solid var(--color-mist); color: var(--color-mist); background-color: transparent; } .ds-btn-outlined-light:hover { background-color: var(--color-mist); color: var(--color-basalt); } .ds-btn-outlined-light:active { background-color: var(--color-fog); color: var(--color-basalt); } .ds-btn-outlined-light:focus-visible { outline: 2px solid var(--color-mist); outline-offset: 3px; }"
+    },
+    {
       "name": "Chip",
       "kind": "chip",
       "refersTo": "chip",
@@ -321,20 +329,20 @@
       "refersTo": "navigation-bar",
       "description": "One rounded glass panel with the name in spaced capitals, the entries and the small Install button.",
       "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-name\" href=\"#\">Open-Breach</a><a class=\"ds-nav-entry\" href=\"#\">Projects</a><a class=\"ds-nav-entry\" href=\"#\">Community</a><a class=\"ds-nav-entry\" href=\"#\">Charter</a><a class=\"ds-nav-entry\" href=\"#\">Team</a><a class=\"ds-nav-install\" href=\"#\">Install</a></nav>",
-      "css": ".ds-nav { font-family: var(--font-sans); display: inline-flex; align-items: center; gap: 2.25rem; min-height: 3.5rem; padding: 0 0.625rem 0 1.75rem; border-radius: var(--radius-panel); background-color: color-mix(in srgb, var(--color-white) 66%, transparent); border: 1px solid color-mix(in srgb, var(--color-white) 78%, transparent); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); box-shadow: var(--shadow-glass); } .ds-nav a { text-decoration: none; color: var(--color-basalt); } .ds-nav a:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-nav-name { font-size: var(--text-fine); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; } .ds-nav-entry { font-size: 0.875rem; text-underline-offset: 0.4em; text-decoration-color: var(--color-stone); } .ds-nav a.ds-nav-entry:hover { text-decoration: underline; text-decoration-color: var(--color-stone); } .ds-nav-install { display: inline-flex; align-items: center; height: 2.25rem; padding: 0 1rem; border-radius: var(--radius-control); background-color: var(--color-amber); font-size: 0.875rem; font-weight: 500; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-nav-install:hover { background-color: var(--color-amber-bright); } .ds-nav-install:active { background-color: var(--color-amber-pressed); }"
+      "css": ".ds-nav { font-family: var(--font-sans); display: inline-flex; align-items: center; gap: 2.25rem; min-height: 3.5rem; padding: 0 0.625rem 0 1.75rem; border-radius: var(--radius-panel); background-color: color-mix(in srgb, var(--color-white) 80%, transparent); border: 1px solid color-mix(in srgb, var(--color-white) 78%, transparent); -webkit-backdrop-filter: blur(24px) saturate(1.15); backdrop-filter: blur(24px) saturate(1.15); box-shadow: var(--shadow-glass); } .ds-nav a { text-decoration: none; color: var(--color-basalt); } .ds-nav a:focus-visible { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-nav-name { font-size: var(--text-fine); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; } .ds-nav-entry { font-size: 0.875rem; text-underline-offset: 0.4em; text-decoration-color: var(--color-stone); } .ds-nav a.ds-nav-entry:hover { text-decoration: underline; text-decoration-color: var(--color-stone); } .ds-nav-install { display: inline-flex; align-items: center; height: 2.25rem; padding: 0 1rem; border-radius: var(--radius-control); background-color: var(--color-amber); font-size: 0.875rem; font-weight: 500; transition: color 150ms, background-color 150ms, border-color 150ms; } .ds-nav-install:hover { background-color: var(--color-amber-bright); } .ds-nav-install:active { background-color: var(--color-amber-pressed); }"
     },
     {
       "name": "Project Card",
       "kind": "card",
       "refersTo": "project-card",
       "description": "A glass card for one project: label, name, one line, platform chips and the link that leads on. The whole card is one link.",
-      "html": "<article class=\"ds-card\"><p class=\"ds-card-label\">Project</p><h3 class=\"ds-card-name\"><a href=\"#\">Rick</a></h3><p class=\"ds-card-line\">A file manager written in Rust.</p><ul class=\"ds-card-chips\"><li class=\"ds-chip\">Linux</li><li class=\"ds-chip\">macOS</li><li class=\"ds-chip\">Windows</li></ul><p class=\"ds-card-explore\">Explore <svg class=\"ds-arrow\" viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2.5 8h11M9.5 4l4 4-4 4\"/></svg></p></article>",
-      "css": ".ds-card { font-family: var(--font-sans); position: relative; display: flex; flex-direction: column; width: 16.25rem; padding: 1.5rem; border-radius: var(--radius-card); background-color: color-mix(in srgb, var(--color-white) 88%, transparent); border: 1px solid color-mix(in srgb, var(--color-white) 90%, transparent); -webkit-backdrop-filter: blur(22px) saturate(1.15); backdrop-filter: blur(22px) saturate(1.15); box-shadow: var(--shadow-glass); transition: border-color 200ms, box-shadow 200ms; } .ds-card:hover { border-color: var(--color-stone); box-shadow: var(--shadow-window); } .ds-card:has(a:focus-visible) { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-card-label { margin: 0 0 1rem; color: var(--color-amber-deep); font-size: 0.75rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; } .ds-card-name { margin: 0; color: var(--color-basalt); font-size: var(--text-name); font-weight: 600; line-height: 1; letter-spacing: -0.02em; } .ds-card-name a { color: inherit; text-decoration: none; outline: none; } .ds-card-name a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-card); } .ds-card-line { margin: 0.875rem 0 0; color: var(--color-ocean); font-size: var(--text-control); line-height: 1.375; } .ds-card-chips { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 1rem 0 0; padding: 0; list-style: none; } .ds-chip { font-family: var(--font-sans); display: inline-flex; align-items: center; height: 1.5rem; padding: 0 0.625rem; border: 1px solid var(--color-stone); border-radius: 9999px; color: var(--color-basalt); font-size: 0.75rem; line-height: 1; } .ds-card-explore { display: flex; align-items: center; gap: 0.375rem; margin: 0; padding-top: 1.25rem; color: var(--color-amber-deep); font-size: 0.875rem; font-weight: 500; } .ds-arrow { transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card:hover .ds-arrow, .ds-card:has(a:focus-visible) .ds-arrow { transform: translateX(0.25rem); }"
+      "html": "<article class=\"ds-card\"><p class=\"ds-card-label\"><span class=\"ds-card-mark\" aria-hidden=\"true\"></span>Project</p><h3 class=\"ds-card-name\"><a href=\"#\">Rick</a></h3><p class=\"ds-card-line\">A file manager written in Rust.</p><ul class=\"ds-card-chips\"><li class=\"ds-chip\">Linux</li><li class=\"ds-chip\">macOS</li><li class=\"ds-chip\">Windows</li></ul><p class=\"ds-card-explore\">Explore <svg class=\"ds-arrow\" viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2.5 8h11M9.5 4l4 4-4 4\"/></svg></p></article>",
+      "css": ".ds-card { font-family: var(--font-sans); position: relative; display: flex; flex-direction: column; width: 16.25rem; padding: 1.5rem; border-radius: var(--radius-card); background-color: color-mix(in srgb, var(--color-white) 88%, transparent); border: 1px solid color-mix(in srgb, var(--color-white) 90%, transparent); -webkit-backdrop-filter: blur(22px) saturate(1.15); backdrop-filter: blur(22px) saturate(1.15); box-shadow: var(--shadow-glass); transition: border-color 200ms, box-shadow 200ms; } .ds-card:hover { border-color: var(--color-stone); box-shadow: var(--shadow-window); } .ds-card:has(a:focus-visible) { outline: 2px solid var(--color-basalt); outline-offset: 3px; } .ds-card-mark { flex-shrink: 0; width: 0.5rem; height: 0.5rem; background-color: var(--color-amber); } .ds-card-label { display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem; color: var(--color-basalt); font-size: 0.75rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; } .ds-card-name { margin: 0; color: var(--color-basalt); font-size: var(--text-name); font-weight: 600; line-height: 1; letter-spacing: -0.02em; } .ds-card-name a { color: inherit; text-decoration: none; outline: none; } .ds-card-name a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-card); } .ds-card-line { margin: 0.875rem 0 0; color: var(--color-ocean); font-size: var(--text-control); line-height: 1.375; } .ds-card-chips { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 1rem 0 0; padding: 0; list-style: none; } .ds-chip { font-family: var(--font-sans); display: inline-flex; align-items: center; height: 1.5rem; padding: 0 0.625rem; border: 1px solid var(--color-stone); border-radius: 9999px; color: var(--color-basalt); font-size: 0.75rem; line-height: 1; } .ds-card-explore { display: flex; align-items: center; gap: 0.375rem; margin: 0; padding-top: 1.25rem; color: var(--color-amber-deep); font-size: 0.875rem; font-weight: 500; } .ds-arrow { transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card:hover .ds-arrow, .ds-card:has(a:focus-visible) .ds-arrow { transform: translateX(0.25rem); }"
     },
     {
       "name": "Instrument Scale",
       "kind": "custom",
-      "description": "The signature: a ruled line with tick marks every 3.75rem and a longer first tick. It divides and measures.",
+      "description": "The signature: a ruled line with tick marks every 3.75rem and a longer first tick. It divides and measures. Over dark rock and on Ocean it is drawn in Mist.",
       "html": "<div class=\"ds-scale\" aria-hidden=\"true\"></div>",
       "css": ".ds-scale { width: 22.5rem; max-width: 100%; position: relative; height: 0.5rem; border-top: 1px solid var(--color-stone); background-image: repeating-linear-gradient(to right, var(--color-stone) 0 1px, transparent 1px 3.75rem); background-size: 100% 0.3125rem; background-repeat: no-repeat; animation: ds-scale-draw 1100ms cubic-bezier(0.16, 1, 0.3, 1) 150ms backwards; } .ds-scale::before { content: ''; position: absolute; top: 0; left: 0; width: 1px; height: 0.5rem; background-color: var(--color-stone); } @keyframes ds-scale-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } } @media (prefers-reduced-motion: reduce) { .ds-scale { animation: none; } }"
     },
@@ -342,9 +350,9 @@
       "name": "Label",
       "kind": "custom",
       "refersTo": "label",
-      "description": "A small signal in spaced capitals, in Deep Amber. Used in two places only.",
-      "html": "<p class=\"ds-label\">Open-Breach · Open source tools</p>",
-      "css": ".ds-label { font-family: var(--font-sans); margin: 0; color: var(--color-amber-deep); font-size: 0.75rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; }"
+      "description": "Spaced capitals in the colour of the text beside it, with a Signal Amber square of 0.5rem before it. Used in two places only.",
+      "html": "<p class=\"ds-label\"><span class=\"ds-label-mark\" aria-hidden=\"true\"></span>Open-Breach · Open source tools</p>",
+      "css": ".ds-label { font-family: var(--font-sans); display: flex; align-items: center; gap: 0.625rem; margin: 0; font-size: 0.75rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; } .ds-label-mark { flex-shrink: 0; width: 0.5rem; height: 0.5rem; background-color: var(--color-amber); }"
     },
     {
       "name": "Badge",
@@ -365,14 +373,15 @@
   "narrative": {
     "northStarStatus": "Proposed name, waiting for the owner's yes.",
     "northStar": "The Instrument Panel on the Coast",
-    "overview": "Clean technology set in raw nature. The site is light and technical: a pale ground of white and pale grey, thin precise lines and glass-like translucent panels, laid over sparse terrain of black stone, grey stone and ocean water. Signal amber is the one accent.\n\nThe direction was decided by Serge on 2026-11-22. The chosen mood board is `docs/design/mood-board-b.png`, and the decisions are in `openspec/changes/add-site-layout/design.md` (D6 and D7). The films Oblivion and Minority Report were named as a mood only. Nothing is copied from them, and stills from films are never used. Two results would feel wrong to the owner: a page that is heavy or dark, and a generic SaaS landing page.\n\nEvery colour, type size, radius and shadow is defined once, in the `@theme` block of `src/app/globals.css`. Tailwind's own palette is switched off, so the eleven colours below are the only ones that exist. Components use the tokens and hold no colour value of their own.\n\nMotion is quiet. One easing is used everywhere, an exponential ease-out (`cubic-bezier(0.16, 1, 0.3, 1)`). The first screen composes itself once in reading order, with small lifts of 0.75rem over 700ms, 70ms apart. The instrument scale draws itself in from the left over 1100ms. The landscape drifts by 2.5 per cent against the scroll. The arrow of a link that leads on moves 0.25rem to the right under the pointer. State changes take 150ms to 200ms, and a control lists only its text colour, background colour and border colour as the properties that change, so the focus ring never fades in from another colour. Where the visitor asks for reduced motion, the lifts and the drawn scale become a 300ms fade, and nothing slides, scales, drifts or moves with scrolling.",
+    "overview": "Clean technology set in raw nature. The site is light and technical: a pale ground of white and pale grey, thin precise lines and glass-like translucent panels, set among four photographs of black rock, grey rock and sea. Signal amber is the one accent.\n\nThe direction was decided by Serge on 2026-11-22. The chosen mood board is `docs/design/mood-board-b.png`, and the decisions are in `openspec/changes/add-site-layout/design.md` (D6 and D7). The photographs, the first screen over a photograph and the form of the label were decided on 2026-11-23, in `openspec/changes/add-photographs/design.md`. The films Oblivion and Minority Report were named as a mood only. Nothing is copied from them, and stills from films are never used. Two results would feel wrong to the owner: a page that is heavy or dark, and a generic SaaS landing page. Of photographs the owner said that a picture should stand out, and should be neither blurry nor flat.\n\nThe first screen of the front page is the one dark place. Its text is light and lies on the dark rock of a photograph, by the owner's decision. From the second screen on, every page is light.\n\nEvery colour, type size, radius and shadow is defined once, in the `@theme` block of `src/app/globals.css`. Tailwind's own palette is switched off, so the eleven colours below are the only ones that exist. Components use the tokens and hold no colour value of their own.\n\nMotion is quiet. One easing is used everywhere, an exponential ease-out (`cubic-bezier(0.16, 1, 0.3, 1)`). The first screen composes itself once in reading order, with small lifts of 0.75rem over 700ms, 70ms apart. The instrument scale draws itself in from the left over 1100ms. The arrow of a link that leads on moves 0.25rem to the right under the pointer. State changes take 150ms to 200ms, and a control lists only its text colour, background colour and border colour as the properties that change, so the focus ring never fades in from another colour. Where the visitor asks for reduced motion, the lifts and the drawn scale become a 300ms fade, and nothing slides, scales or moves with scrolling. The photographs do not move at all.",
     "keyCharacteristics": [
       "A light scheme: Mist ground, Basalt type, Stone hairlines.",
       "Signal amber as the one accent, on actions and small signals only.",
       "Glass panels with a thin light edge and one soft shadow.",
       "The instrument scale as the divider and the measure.",
-      "Landscape of stone and ocean, edge to edge, at the top and the foot of the page.",
-      "Labels in spaced capitals; versions, dates and commands in mono."
+      "Four photographs of rock and sea, edge to edge, each passing into the pale ground with no edge.",
+      "One dark place, the first screen of the front page, with Mist text on dark rock and no veil.",
+      "Labels in spaced capitals behind a small amber square; versions, dates and commands in mono."
     ],
     "rules": [
       {
@@ -382,7 +391,7 @@
       },
       {
         "name": "The Landscape Rule",
-        "body": "Imagery shows sparse terrain only: black stone, grey stone, ocean water. No green and no turquoise. The finished site uses real photographs, each recorded with its source, author and licence. Until they are chosen, a drawn stand-in in the same tones and proportions takes their place, and replacing it does not change the layout around it. In the build the stand-ins are two drawn SVG files: layered ridges over a band of ocean for the first screen, and a shore above the footer.",
+        "body": "The landscape imagery of the site is four photographs chosen by the owner, and nothing else: basalt columns, rocks in fog, three stacks under an amber sky, and a sea stack. They show black rock, grey rock and sea, with no green and no turquoise. No drawn landscape, no generated picture and no mirrored picture stands beside them. Each photograph is recorded in `src/content/images.ts` and in `THIRD-PARTY-NOTICES.md` with its source, its photographer, its licence and what was done to the file, and the footer of every page credits the four photographers.",
         "section": "overview"
       },
       {
@@ -392,7 +401,7 @@
       },
       {
         "name": "The Amber Marks Actions Rule",
-        "body": "Amber is kept for the Install call to action and for small signals, such as a label or a link that leads on. It is never the colour of running text or of a large surface. On the first screen, the Install call to action is the largest amber element.",
+        "body": "Amber is kept for the Install call to action and for small signals, such as the square before a label or a link that leads on. It is never the colour of running text or of a large surface. On the first screen, the Install call to action is the largest amber element.",
         "section": "colors"
       },
       {
@@ -402,7 +411,12 @@
       },
       {
         "name": "The Readable Rule",
-        "body": "Text meets WCAG 2.1 level AA against what is behind it, on panels, on amber and over imagery: 4.5 to 1, and 3 to 1 for large text. `tests/unit/tokens.test.ts` checks every pair used for text. Two consequences are deliberate departures from the mood board. Secondary text is Ocean, not Stone, because Stone on Mist reaches only 3.00 to 1. Small amber text uses Deep Amber, because Signal Amber on Mist reaches only 2.19 to 1; the fills stay Signal Amber. The label on an amber fill is Basalt (6.86 to 1), never white.",
+        "body": "Text meets WCAG 2.1 level AA against what is behind it, on panels, on amber and over imagery: 4.5 to 1, and 3 to 1 for large text. `tests/unit/tokens.test.ts` checks every pair of tokens used for text. Over a photograph the contrast is measured in the browser, as the Placement Rule says. Two consequences are deliberate departures from the mood board. Secondary text is Ocean, not Stone, because Stone on Mist reaches only 3.00 to 1. Small amber text uses Deep Amber, because Signal Amber on Mist reaches only 2.19 to 1; the fills stay Signal Amber. The text on an amber fill is Basalt (6.86 to 1), never white.",
+        "section": "colors"
+      },
+      {
+        "name": "The Placement Rule",
+        "body": "Where text lies over a photograph, its contrast comes from where the picture is placed and from the colour of the text. A veil is the last means: never more than a fifth strong, and never over the whole picture. The build uses none. The browser checks in `tests/e2e/photographs.spec.ts` measure every line of text over a photograph at 390, 768, 1440 and 1920 pixels wide, against the pixels that lie under it.",
         "section": "colors"
       },
       {
@@ -412,8 +426,13 @@
       },
       {
         "name": "The Two Labels Rule",
-        "body": "The small amber label in spaced capitals appears in two places, both taken from the mood board by the owner's decision: above the headline of the first screen, and on the project card where it stands alone there. No other section or heading gets one.",
+        "body": "The small label in spaced capitals appears in two places, both taken from the mood board by the owner's decision: above the headline of the first screen, and on the project card where it stands alone there. Both have one form: the text in the colour of the text beside it (Mist on the rock, Basalt on the card) and a Signal Amber square of 8px before it. Small amber text does not hold its contrast over a photograph, so the square carries the amber. No other section or heading gets a label.",
         "section": "typography"
+      },
+      {
+        "name": "The Chosen In The Page Rule",
+        "body": "A part of a photograph is chosen for a place in the page and never in the file. A photograph has a frame, which the page shows, and inside it the picture's own box, which may be larger than the frame and is held at one side of it. The files are not cropped.",
+        "section": "layout"
       },
       {
         "name": "The Glass Fallback Rule",
@@ -421,20 +440,30 @@
         "section": "elevation"
       },
       {
-        "name": "The Small Dark Rule",
-        "body": "Basalt and Ocean surfaces stay small against the Mist: the landscape, the water band of the footer, and a control under the pointer. No section of content is set on a dark ground.",
+        "name": "The Sharp Photograph Rule",
+        "body": "Nothing blurs a photograph except a glass panel that lies over it. A photograph is delivered sharp, and while it loads its place has a flat tone taken from the picture (Basalt for the columns, Haze for the others), never a blurred preview. Where a photograph meets the pale ground above it, it passes into it through an eased mask with no edge at either end; the mask hides the picture and does not soften it.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Dark Place Rule",
+        "body": "The first screen of the front page is the one place where content stands on a dark ground, and that is the owner's decision. Everywhere else Basalt and Ocean surfaces stay small against the Mist: the footer and a control under the pointer. No other section of content is set on a dark ground or over the dark part of a photograph.",
         "section": "elevation"
       }
     ],
     "dos": [
       "Do keep amber for actions and small signals: Signal Amber for fills, Deep Amber for small text.",
-      "Do set secondary text in Ocean on the light ground and in Fog on Ocean and Basalt.",
-      "Do put a Basalt label on an amber fill.",
+      "Do set secondary text in Ocean on the light ground and in Fog on Ocean.",
+      "Do set every line over the dark rock of the first screen in Mist, and draw its outline and its scale in Mist.",
+      "Do put Basalt text on an amber fill.",
       "Do use the solid Basalt button for a first action that is not Install.",
       "Do show the focus mark on every link, button and control: a 2px Basalt ring at a 3px offset, Mist on dark grounds.",
       "Do divide with the instrument scale, hairlines and space before reaching for a box.",
       "Do take every colour, type size and shadow from the theme tokens, and every radius from the three radius tokens unless it is a window corner or a badge.",
-      "Do record every image with its source, author and licence before it is used.",
+      "Do record every image with its source, author, licence and changes before it is used, and credit every photographer in the footer.",
+      "Do choose the part of a photograph in the page, with the frame and the picture's box, and leave the file as it is.",
+      "Do measure the contrast of every line over a photograph in the browser, at 390, 768, 1440 and 1920 pixels wide.",
+      "Do let a photograph pass into the pale ground above it through the eased fade, with no edge.",
+      "Do give the place of a loading photograph a flat tone taken from the picture.",
       "Do write everything that moves inside the block for visitors who accept motion, with the exponential ease-out."
     ],
     "donts": [
@@ -444,10 +473,13 @@
       "Don't set text in Stone at body sizes, or in Signal Amber at any size.",
       "Don't use green or turquoise in imagery.",
       "Don't use stills from films.",
-      "Don't let the page turn heavy or dark. Basalt and Ocean surfaces stay small against the Mist.",
+      "Don't let the page turn heavy or dark. The first screen of the front page is the one dark place; below it Basalt and Ocean surfaces stay small against the Mist.",
+      "Don't add landscape imagery beside the four photographs: no drawn landscape, no generated picture, no mirrored picture.",
+      "Don't blur a photograph, and do not show a blurred preview while it loads. Only a glass panel softens what lies behind it.",
+      "Don't reach for a veil before the placement of the picture and the colour of the text have been tried, and never lay one over a whole picture.",
+      "Don't move a photograph with the scroll.",
       "Don't build a generic SaaS landing page: no centred headline over a gradient, no grid of icon cards, no wall of claims.",
-      "Don't put a small amber label above any heading other than the two the mood board shows.",
-      "Don't lay text directly over the landscape. Only a glass card overlaps it.",
+      "Don't put a label above any heading other than the two the mood board shows, and do not set a label in amber text.",
       "Don't stack shadows or lift flat content. The glass shadow and the window shadow are the whole vocabulary."
     ]
   }

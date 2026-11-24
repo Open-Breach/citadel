@@ -46,12 +46,17 @@ async function coloursInUse(page: Page) {
 test.describe("light scheme with one accent", () => {
   test.use({ viewport: desktop });
 
-  test("the front page is pale, its headline near-black, and amber the only saturated colour", async ({ page }) => {
+  test("the first screen is the photograph of the basalt columns, and amber is the only saturated colour of the interface", async ({ page }) => {
     await page.goto("/");
+    await expect(page.locator("main section").first().locator('[data-photograph="basaltColumns"]')).toHaveCount(1);
+    // Below the first screen the background is pale and running text is near-black.
     const background = parseColor(await styleOf(page.locator("html"), "background-color"));
     expect(background.rgb.map(Math.round)).toEqual(mist);
-    const headline = parseColor(await styleOf(page.getByRole("heading", { level: 1 }), "color"));
-    expect(Math.max(...headline.rgb)).toBeLessThan(48);
+    for (const section of ["#projects", "#built-with-claude", "#team"]) {
+      const text = parseColor(await styleOf(page.locator(`${section} p`).first(), "color"));
+      expect(Math.max(...text.rgb), section).toBeLessThan(90);
+      expect(parseColor(await styleOf(page.locator(section), "background-color")).alpha, section).toBe(0);
+    }
 
     const saturated = (await coloursInUse(page)).filter((colour) => colour.saturation > 0.45);
     expect(saturated.length).toBeGreaterThan(0);
@@ -183,12 +188,9 @@ async function withoutBackdropFilters(page: Page) {
 test.describe("glass panels and thin lines", () => {
   test.use({ viewport: desktop });
 
-  test("the navigation lets the landscape show through softened, and its entries stay readable", async ({ page }) => {
+  test("the navigation lets the photograph show through softened, and its entries stay readable", async ({ page }) => {
     await page.goto("/");
-    // Scroll until the navigation lies over the darkest part of the landscape.
-    const image = page.locator("main section").first().locator("img");
-    const box = (await image.boundingBox())!;
-    await page.evaluate((y) => window.scrollTo(0, y), box.y + box.height - 120);
+    // At the top of the page the navigation lies over the basalt columns.
 
     const bar = page.getByRole("navigation", { name: "Main" }).locator(".glass").first();
     expect(await styleOf(bar, "backdrop-filter")).toContain("blur");
@@ -252,8 +254,9 @@ test.describe("glass panels and thin lines", () => {
 test.describe("readable contrast", () => {
   test("secondary text on the pale background has at least 4.5 to 1", async ({ page }) => {
     await page.goto("/");
-    const intro = page.locator("main section").first().locator("p").nth(1);
+    const intro = page.locator("#projects p").first();
     const text = parseColor(await styleOf(intro, "color"));
+    expect(text.rgb.map(Math.round)).toEqual([62, 74, 85]);
     expect(contrast(text.rgb, mist)).toBeGreaterThanOrEqual(4.5);
     // Where the background darkens towards the land, it still holds.
     expect(contrast(text.rgb, [221, 226, 229])).toBeGreaterThanOrEqual(4.5);
@@ -268,36 +271,13 @@ test.describe("readable contrast", () => {
     expect(contrast(label.rgb, fill.rgb)).toBeGreaterThanOrEqual(4.5);
   });
 
-  test("small amber text uses the darker amber, at 4.5 to 1 or more", async ({ page }) => {
+  test("small amber text on the pale ground uses the darker amber, at 4.5 to 1 or more", async ({ page }) => {
     await page.goto("/");
-    const label = page.locator("main section").first().locator("p").first();
-    const text = parseColor(await styleOf(label, "color"));
+    const explore = page.locator("#projects article").nth(1).getByText("Explore");
+    const text = parseColor(await styleOf(explore, "color"));
     expect(text.rgb.map(Math.round)).not.toEqual(amber);
     expect(contrast(text.rgb, mist)).toBeGreaterThanOrEqual(4.5);
   });
-
-  for (const { name, viewport } of sizes) {
-    test(`at ${name}, no text lies over the landscape without a panel behind it`, async ({ page }) => {
-      await page.setViewportSize(viewport);
-      await page.goto("/");
-      const uncovered = await page.evaluate(() => {
-        const found: string[] = [];
-        for (const image of document.querySelectorAll("main img, footer img")) {
-          if (image.getAttribute("alt") !== "") continue; // only the decorative landscape
-          const area = image.getBoundingClientRect();
-          for (const element of document.querySelectorAll("main *, footer *")) {
-            const hasText = [...element.childNodes].some((n) => n.nodeType === 3 && (n.textContent ?? "").trim());
-            if (!hasText || element.closest(".sr-only")) continue;
-            const rect = element.getBoundingClientRect();
-            const overlaps = rect.left < area.right && rect.right > area.left && rect.top < area.bottom && rect.bottom > area.top;
-            if (overlaps && !element.closest(".glass, .glass-card")) found.push((element.textContent ?? "").trim());
-          }
-        }
-        return found;
-      });
-      expect(uncovered).toEqual([]);
-    });
-  }
 });
 
 test.describe("visible keyboard focus", () => {
@@ -313,10 +293,17 @@ test.describe("visible keyboard focus", () => {
     expect(parseFloat(await styleOf(install, "outline-width"))).toBeGreaterThanOrEqual(2);
     expect(parseFloat(await styleOf(install, "outline-offset"))).toBeGreaterThanOrEqual(2);
     const ring = parseColor(await styleOf(install, "outline-color")).rgb;
-    // Next to the ring: the pale background outside, the amber fill inside.
-    expect(contrast(ring, mist)).toBeGreaterThanOrEqual(3);
-    expect(contrast(ring, [221, 226, 229])).toBeGreaterThanOrEqual(3);
-    expect(contrast(ring, amber)).toBeGreaterThanOrEqual(3);
+    // The call to action lies on the dark rock, so its ring is light. Next to the
+    // ring, inside it and outside it, is the rock: the ring stands off the fill.
+    expect(ring.map(Math.round)).toEqual(mist);
+    expect(contrast(ring, [30, 33, 36])).toBeGreaterThanOrEqual(3);
+    expect(contrast(ring, [90, 94, 98])).toBeGreaterThanOrEqual(3);
+    // On the pale ground further down the ring is Basalt.
+    const closing = page.locator("main > section").last().getByRole("link", { name: "Install" });
+    await closing.focus();
+    const dark = parseColor(await styleOf(closing, "outline-color")).rgb;
+    expect(contrast(dark, mist)).toBeGreaterThanOrEqual(3);
+    expect(contrast(dark, amber)).toBeGreaterThanOrEqual(3);
   });
 
   for (const path of ["/fixtures/components", "/", "/projects/rick", "/community"]) {
@@ -448,7 +435,7 @@ test.describe("reduced motion", () => {
         for (const name of running) names.add(name);
         return [...names];
       }, { intervals: [20] })
-      .toEqual(expect.arrayContaining(["rise", "scale-draw", "drift"]));
+      .toEqual(expect.arrayContaining(["rise", "scale-draw"]));
     await context.close();
   });
 });
@@ -476,18 +463,4 @@ test.describe("layout adapts to the screen", () => {
     expect(new Set(team).size).toBe(2);
   });
 
-  test("the landscape is a drawn stand-in that fills its place edge to edge", async ({ page }) => {
-    await page.setViewportSize(desktop);
-    await page.goto("/");
-    const image = page.locator("main section").first().locator("img");
-    await expect(image).toHaveAttribute("src", /landscape-stand-in\.svg/);
-    // The place of the image: the box it fills, from edge to edge.
-    const box = (await image.locator("xpath=..").boundingBox())!;
-    expect(Math.round(box.x)).toBe(0);
-    expect(Math.round(box.width)).toBe(1440);
-    expect(await styleOf(image.locator("xpath=.."), "overflow-x")).toBe("hidden");
-    // Its place does not depend on the image: the box is sized by the layout.
-    expect(await styleOf(image, "position")).toBe("absolute");
-    expect(await styleOf(image, "object-fit")).toBe("cover");
-  });
 });

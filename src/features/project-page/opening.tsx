@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ArrowOutIcon, CheckIcon, CloseIcon, StarIcon } from "@/components/ui/icons";
 import { SampleNote } from "@/components/ui/sample-note";
-import { ScaleRule } from "@/components/ui/scale-rule";
+import { Photograph } from "@/components/ui/photograph";
 import { image } from "@/content/images";
 import { calls, projectPage, ui } from "@/content/site";
 import type { Project, ProjectPage } from "@/content/types";
@@ -13,7 +13,8 @@ import { Text } from "@/components/ui/text";
 
 /**
  * The top of a project page: what the project is, its four badges, the way
- * to its install steps and to its source, and the project at work.
+ * to its install steps and to its source, the project at work, and the
+ * photograph of the sea stack that ends the opening.
  */
 export function Opening({ project, page }: { project: Project; page: ProjectPage }) {
   const lead = page.screenshots[0];
@@ -24,7 +25,7 @@ export function Opening({ project, page }: { project: Project; page: ProjectPage
     <section
       id="about"
       aria-labelledby="about-heading"
-      className="from-mist to-haze bg-linear-to-b from-20%"
+      className="from-mist to-haze bg-linear-to-b from-20% to-70%"
     >
       <Container className="grid grid-cols-1 items-center gap-x-8 gap-y-12 pt-28 pb-16 sm:pt-36 lg:grid-cols-12 lg:pt-[clamp(7.5rem,18.3svh,11rem)] lg:pb-24">
         <div className="lg:col-span-5">
@@ -77,17 +78,33 @@ export function Opening({ project, page }: { project: Project; page: ProjectPage
               alt={shot.description}
               width={shot.width}
               height={shot.height}
-              priority
+              preload
               sizes="(min-width: 1024px) 56vw, 100vw"
               className="border-stone/40 shadow-window h-auto w-full rounded-xl border"
             />
           </div>
         ) : null}
       </Container>
-      {/* The opening ends on the instrument scale, where the ground is darkest. */}
-      <Container>
-        <ScaleRule />
-      </Container>
+      {/*
+        The opening ends on the sea stack, on every project page. It fades in
+        from the pale ground, the stack stands right of the middle with its
+        base and the waterline in view, and no text lies over it.
+
+        On a wide screen the picture is shown a little larger than the page
+        and held at its right edge, so that the frame holds the stack and the
+        small rocks before it. The cliff on the left of the photograph is out
+        of focus in the file and stays outside the frame.
+      */}
+      <Photograph
+        id="seaStack"
+        fadeIn
+        sizes="(max-width: 640px) 170vw, (max-width: 1024px) 100vw, 128vw"
+        className="relative h-[max(48vw,21rem)] [--fade-end:19%] lg:h-[56.5vw] lg:[--fade-end:14%]"
+        // Narrow: the picture from 6 to 69 per cent of its height.
+        // Wide: 1.28 times the page's width, from 10 to 68 per cent of its height.
+        boxClassName="absolute inset-x-0 top-[-9.5%] h-[158.7%] lg:right-0 lg:left-auto lg:top-[-17.2%] lg:h-[172.4%] lg:w-[128%]"
+        imageClassName="object-[82%_50%]"
+      />
     </section>
   );
 }

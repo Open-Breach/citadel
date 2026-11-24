@@ -39,9 +39,13 @@ The imagery of the site SHALL be photographs of sparse terrain: black stone, gre
 - **WHEN** the landscape images of the site are listed
 - **THEN** they are the four chosen photographs and nothing else
 
-#### Scenario: No stand-in
+#### Scenario: Stand-in
 - **WHEN** any page of the site is opened
 - **THEN** no drawn landscape is shown
+
+#### Scenario: Replacing the stand-in
+- **WHEN** the four photographs are in the site
+- **THEN** the two drawn landscapes of round one are gone, with their files and their records
 
 #### Scenario: Moss on the sea stack
 - **WHEN** the photograph of the sea stack is shown
@@ -77,7 +81,7 @@ Text SHALL meet the contrast of WCAG 2.1 level AA against what is behind it: 4.5
 - **WHEN** a call to action has an amber fill
 - **THEN** its label has a contrast of at least 4.5 to 1 against the fill
 
-#### Scenario: Text over a photograph
+#### Scenario: Text over the landscape
 - **WHEN** text lies over a photograph, at 390, 768, 1440 and 1920 pixels wide
 - **THEN** every line of it has at least 4.5 to 1 against the part of the picture it lies over, or 3 to 1 where the text is large
 

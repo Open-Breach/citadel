@@ -4,13 +4,14 @@ Citadel is the website of [Open-Breach](https://github.com/Open-Breach), at open
 
 ## Status
 
-Round one. The site is specified as [OpenSpec](https://github.com/Fission-AI/OpenSpec) changes and is built in rounds, one change per round. Serge looks at each round running before the next one starts.
+Round two. The site is specified as [OpenSpec](https://github.com/Fission-AI/OpenSpec) changes and is built in rounds, one change per round. Serge looks at each round running before the next one starts.
 
-In this round the site runs over plain HTTP on localhost only. It has the front page and the Rick page; the other pages say that they are still to come. Texts, imagery, releases and badge values are placeholders.
+The site runs over plain HTTP on localhost only. It has the front page and the Rick page; the other pages say that they are still to come. The four landscape photographs are in place. Texts, releases and badge values are still placeholders.
 
 | Change | What it is | State |
 | --- | --- | --- |
-| [add-site-layout](openspec/changes/add-site-layout/) | Round one: the project's frame, the design system, the front page and the Rick page, over plain HTTP on localhost | Built, waits for Serge's review |
+| [add-site-layout](openspec/changes/archive/2026-11-23-add-site-layout/) | Round one: the project's frame, the design system, the front page and the Rick page, over plain HTTP on localhost | Done and archived. Its specs are in [openspec/specs](openspec/specs/) |
+| [add-photographs](openspec/changes/add-photographs/) | Round two: the four photographs, the first screen over a photograph, and the answers to the questions of round one | Built, waits for Serge's review |
 | [add-https-start-up](openspec/changes/add-https-start-up/) | The switch to HTTPS: certificates from Azure Key Vault picked by host name, the HTTP to HTTPS redirect, the container image | Waits for the certificates |
 | [add-remaining-pages](openspec/changes/add-remaining-pages/) | The other four project pages, Community, Charter, data from GitHub, the real photographs | Provisional, revised after the review of round one |
 
@@ -56,15 +57,19 @@ Everything a page says is data in `src/content`, not in the components:
 | `src/content/projects.ts` | The five projects, and for a project with a page everything its page says |
 | `src/content/releases.ts` | The release entries of the front page |
 | `src/content/team.ts` | The team |
-| `src/content/images.ts` | The record of every image: its source, its author and its licence |
+| `src/content/images.ts` | The record of every image: its source, its author, its licence and the changes made to it |
 
 A text or an image that is still a placeholder is marked as one in these files. Remove the marker when the content is final; `npm run placeholders` then stops listing it.
 
 The layout lives in `src/app` (the routes), `src/components` (the shell and the design system) and `src/features` (the sections of the front page and of a project page).
 
+## Photographs
+
+The four photographs are in `public/images/photographs/`, each at most 3840 pixels wide. The site resizes them for the screen that asks and delivers AVIF or WebP. The first request for a size takes a few seconds to encode; after that it comes from the cache under `.next/cache/images`, which keeps a size for 31 days. When a photograph is replaced under the same name, delete that folder, or the site goes on delivering the old picture. A part of a photograph is chosen for its place in the page, by placement, and never by cutting the file. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) names the photographers and the licence.
+
 ## Design
 
-The look is decided: light, modern and technical, set against sparse landscape, with signal amber as the one accent. The chosen mood board is [docs/design/mood-board-b.png](docs/design/mood-board-b.png), and the design decisions are in the [design of round one](openspec/changes/add-site-layout/design.md). [DESIGN.md](DESIGN.md) records the design system as it is built.
+The look is decided: light, modern and technical, set against sparse landscape, with signal amber as the one accent. The chosen mood board is [docs/design/mood-board-b.png](docs/design/mood-board-b.png), and the design decisions are in the [design of round one](openspec/changes/archive/2026-11-23-add-site-layout/design.md) and the [design of round two](openspec/changes/add-photographs/design.md), which brought in the photographs. [DESIGN.md](DESIGN.md) records the design system as it is built.
 
 ## Tools in this repository
 

@@ -25,7 +25,10 @@ test.describe("shared navigation", () => {
       const links = page.getByRole("navigation", { name: "Main" }).getByRole("link");
       seen.push(await links.evaluateAll((all) => all.map((a) => `${a.textContent} → ${a.getAttribute("href")}`)));
     }
-    for (const links of seen) expect(links).toEqual(seen[0]);
+    // The same entries everywhere. Only Install differs, and only on a project page.
+    const onRick = [...seen[0].slice(0, 5), "Install → /projects/rick#install"];
+    expect(seen[1]).toEqual(onRick);
+    for (const links of [seen[2], seen[3]]) expect(links).toEqual(seen[0]);
     expect(seen[0]).toEqual([
       "Open-Breach → /",
       "Projects → /#projects",
@@ -49,6 +52,32 @@ test.describe("shared navigation", () => {
     await expect(page).toHaveURL("/#team");
     const heading = page.getByRole("heading", { name: "The team" });
     await expect.poll(() => isInViewport(heading)).toBe(true);
+  });
+});
+
+test.describe("Install in the navigation", () => {
+  for (const viewport of [desktop, phone]) {
+    test(`at ${viewport.width} wide, on the Rick page it moves to Rick's install instructions and stays on the page`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await gotoReady(page, "/projects/rick");
+      await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Install" }).click();
+      await expect(page).toHaveURL("/projects/rick#install");
+      await expect.poll(() => isInViewport(page.getByRole("heading", { name: "Install", exact: true }))).toBe(true);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Rick");
+    });
+
+    test(`at ${viewport.width} wide, on the front page it moves to the projects section`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await gotoReady(page, "/");
+      await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Install" }).click();
+      await expect(page).toHaveURL("/#projects");
+      await expect.poll(() => isInViewport(page.getByRole("heading", { name: "Five projects" }))).toBe(true);
+    });
+  }
+
+  test("on a page of a project that is still to come it leads to the projects", async ({ page }) => {
+    await page.goto("/projects/gossip");
+    await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Install" })).toHaveAttribute("href", "/#projects");
   });
 });
 

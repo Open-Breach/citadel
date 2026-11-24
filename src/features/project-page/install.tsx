@@ -50,7 +50,12 @@ export function Install({ project, page }: { project: Project; page: ProjectPage
                     <p className="text-basalt max-w-[40rem] leading-relaxed">
                       <Text>{step.text.text}</Text>
                     </p>
-                    {step.downloads ? (
+                    {step.stillToCome ? (
+                      <p data-still-to-come className="text-ocean mt-2 text-fine font-medium">
+                        {ui.stillToCome.text}
+                      </p>
+                    ) : null}
+                    {step.downloads && !step.stillToCome ? (
                       <ul className="mt-4 flex flex-wrap gap-2">
                         {step.downloads.map((download) => (
                           <li key={download.url} className="flex">
@@ -63,7 +68,7 @@ export function Install({ project, page }: { project: Project; page: ProjectPage
                         ))}
                       </ul>
                     ) : null}
-                    {step.command ? (
+                    {step.command && !step.stillToCome ? (
                       // On a narrow screen the command wraps, so that all of it shows.
                       <div className="border-stone/60 bg-white rounded-control mt-4 flex flex-col items-end gap-2 border p-2 pl-4 sm:flex-row sm:items-start sm:gap-3">
                         <pre className="text-basalt w-full min-w-0 flex-1 py-1.5 font-mono text-sm leading-relaxed break-all whitespace-pre-wrap sm:overflow-x-auto sm:break-normal sm:whitespace-pre">

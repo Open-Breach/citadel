@@ -152,7 +152,7 @@
  *
  * glass        carries Basalt text only (the navigation).
  * glass-card   carries secondary and amber text too, so it stays milkier:
- *              over the darkest part of the landscape that text still has
+ *              over the darkest part of a photograph that text still has
  *              4.5 to 1.
  */
 @utility glass {
@@ -169,10 +169,15 @@
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass {
-    background-color: color-mix(in srgb, var(--color-white) 66%, transparent);
+    background-color: color-mix(in srgb, var(--color-white) 80%, transparent);
     border-color: color-mix(in srgb, var(--color-white) 78%, transparent);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
-    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(24px) saturate(1.15);
+    backdrop-filter: blur(24px) saturate(1.15);
+  }
+
+  /* The open menu on a narrow screen: nearly solid. */
+  .menu-sheet {
+    background-color: color-mix(in srgb, var(--color-white) 95%, transparent);
   }
 
   .glass-card {
@@ -211,42 +216,52 @@
   }
 }
 
-/* On Ocean and Basalt the scale is drawn in Fog, thinned. */
+/* Over dark rock and on Ocean the scale is drawn in Mist. */
 @utility scale-rule-on-dark {
-  border-top-color: color-mix(in srgb, var(--color-fog) 55%, transparent);
+  border-top-color: var(--color-mist);
   background-image: repeating-linear-gradient(
     to right,
-    color-mix(in srgb, var(--color-fog) 55%, transparent) 0 1px,
+    var(--color-mist) 0 1px,
     transparent 1px var(--scale-step, 3.75rem)
   );
 
   &::before {
-    background-color: color-mix(in srgb, var(--color-fog) 55%, transparent);
+    background-color: var(--color-mist);
   }
 }
 
-/* Thin horizontal lines on the water, as on board B. */
-@utility water-lines {
-  background-image:
-    linear-gradient(
-      to right,
-      transparent 6%,
-      color-mix(in srgb, var(--color-fog) 30%, transparent) 6% 34%,
-      transparent 34%
-    ),
-    linear-gradient(
-      to right,
-      transparent 52%,
-      color-mix(in srgb, var(--color-fog) 24%, transparent) 52% 86%,
-      transparent 86%
-    );
-  background-size:
-    100% 1px,
-    100% 1px;
-  background-position:
-    0 1.5rem,
-    0 3rem;
-  background-repeat: no-repeat;
+/*
+ * The photograph of the first screen. It is a little wider than the screen
+ * (1600 pixels at 1440, as on the board Serge chose) and at least as wide
+ * as its height needs, so that it always covers the screen. Where the text
+ * column moves towards the middle on a wide screen, the picture grows with
+ * it, so that the rock still lies under the text.
+ */
+@utility hero-photograph {
+  width: max(111.2vw + 2.2 * max(0px, (100vw - 90rem) / 2), 100%);
+}
+
+/*
+ * A photograph that fades in from the ground above it: its top is
+ * transparent and it is whole from --fade-end down. The ramp is eased at
+ * both ends, so the fade has no line where it starts and none where it
+ * ends. The mask hides the picture; it does not soften it.
+ */
+@utility fade-in-top {
+  --fade-ramp:
+    rgb(0 0 0 / 0) calc(var(--fade-end, 40%) * 0),
+    rgb(0 0 0 / 0.028) calc(var(--fade-end, 40%) * 0.1),
+    rgb(0 0 0 / 0.104) calc(var(--fade-end, 40%) * 0.2),
+    rgb(0 0 0 / 0.216) calc(var(--fade-end, 40%) * 0.3),
+    rgb(0 0 0 / 0.352) calc(var(--fade-end, 40%) * 0.4),
+    rgb(0 0 0 / 0.5) calc(var(--fade-end, 40%) * 0.5),
+    rgb(0 0 0 / 0.648) calc(var(--fade-end, 40%) * 0.6),
+    rgb(0 0 0 / 0.784) calc(var(--fade-end, 40%) * 0.7),
+    rgb(0 0 0 / 0.896) calc(var(--fade-end, 40%) * 0.8),
+    rgb(0 0 0 / 0.972) calc(var(--fade-end, 40%) * 0.9),
+    rgb(0 0 0 / 1) calc(var(--fade-end, 40%) * 1);
+  -webkit-mask-image: linear-gradient(to bottom, var(--fade-ramp));
+  mask-image: linear-gradient(to bottom, var(--fade-ramp));
 }
 
 /*
@@ -283,24 +298,6 @@
     from {
       opacity: 0;
       transform: translateY(0.75rem);
-    }
-  }
-
-  /* The landscape drifts slightly against the scroll. */
-  @supports (animation-timeline: view()) {
-    .drift {
-      animation: drift linear both;
-      animation-timeline: view();
-      animation-range: entry 0% exit 100%;
-    }
-
-    @keyframes drift {
-      from {
-        transform: translateY(-2.5%) scale(1.05);
-      }
-      to {
-        transform: translateY(2.5%) scale(1.05);
-      }
     }
   }
 

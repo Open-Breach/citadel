@@ -27,11 +27,7 @@ export function Screenshots({ page }: { page: ProjectPage }) {
         <div className="mt-10">
           <ScreenshotGallery
             items={items}
-            labels={{
-              viewLarger: ui.viewLarger.text,
-              close: ui.close.text,
-              panHint: ui.panHint.text,
-            }}
+            labels={{ viewLarger: ui.viewLarger.text, close: ui.close.text }}
           />
         </div>
       </Container>

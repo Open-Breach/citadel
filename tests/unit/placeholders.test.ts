@@ -4,6 +4,7 @@ import { describe, test } from "node:test";
 import { contentSources, images } from "../../src/content/index.ts";
 import { formatPlaceholders, listPlaceholders } from "../../src/content/placeholders.ts";
 import { projects } from "../../src/content/projects.ts";
+import type { ImageRecord } from "../../src/content/types.ts";
 
 const list = listPlaceholders(contentSources, images);
 const rickPage = "Rick page (/projects/rick)";
@@ -37,12 +38,13 @@ describe("npm run placeholders", () => {
 
   test("lists every placeholder image with the pages that use it", () => {
     const listed = list.filter((item) => item.kind === "image");
-    const expected = Object.values(images)
+    const expected = (Object.values(images) as ImageRecord[])
       .filter((record) => record.placeholder)
       .reduce((sum, record) => sum + record.usedOn.length, 0);
     assert.equal(listed.length, expected);
     assert.ok(listed.some((item) => item.page === rickPage && /readme-light\.png/.test(item.what)));
-    assert.ok(listed.some((item) => /landscape-stand-in\.svg/.test(item.what)));
+    // The photographs are chosen, so the list names no landscape any more.
+    assert.ok(!list.some((item) => /landscape|shore|photographs\//.test(item.what)));
   });
 
   test("lists sample data: the releases and the badge values", () => {
@@ -50,9 +52,11 @@ describe("npm run placeholders", () => {
     assert.ok(list.some((item) => item.kind === "data" && /stars:/.test(item.what)));
   });
 
-  test("lists the install commands and the download links, which nobody has run yet", () => {
-    assert.ok(list.some((item) => item.what.startsWith("curl -fsSL https://get.openbreach.dev/install.sh")));
-    assert.ok(list.some((item) => item.kind === "data" && /label: Windows x64/.test(item.what)));
+  test("lists the install command, which nobody has run yet, and no download that was checked", () => {
+    // The command for the package repository is gone, and the downloads are checked.
+    assert.ok(!list.some((item) => /get\.openbreach\.dev/.test(item.what)));
+    assert.ok(!list.some((item) => /label: Windows x64/.test(item.what)));
+    assert.ok(list.some((item) => item.what.startsWith("tar xzf rick-0.6.0-linux-x64.tar.gz")));
   });
 
   test("says so when no placeholder is left", () => {

@@ -16,15 +16,16 @@ export type GalleryItem = {
 };
 
 /**
- * The screenshots of a project. Each one opens a larger view, which closes
- * with the Escape key, with its Close button or with a click beside it.
+ * The screenshots of a project. Each one opens a larger view, which fits
+ * the screen at every width and closes with the Escape key, with its Close
+ * button or with a click beside it.
  */
 export function ScreenshotGallery({
   items,
   labels,
 }: {
   items: GalleryItem[];
-  labels: { viewLarger: string; close: string; panHint: string };
+  labels: { viewLarger: string; close: string };
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -33,7 +34,12 @@ export function ScreenshotGallery({
   // that was opened again in the meantime.
   const [current, setCurrent] = useState<GalleryItem | null>(null);
 
-  function open(item: GalleryItem) {
+  // The file the page already shows for the screenshot: it fills the larger
+  // view at once, and the larger file takes its place when it arrives.
+  const [preview, setPreview] = useState<string>();
+
+  function open(item: GalleryItem, shown?: string) {
+    setPreview(shown);
     // The view is filled before it opens, and the focus goes to Close every time.
     flushSync(() => setCurrent(item));
     dialog.current?.showModal();
@@ -44,11 +50,11 @@ export function ScreenshotGallery({
     <>
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {items.map((item, index) => (
-          <li key={item.src} className={cn(index === 0 && "lg:col-span-2 lg:row-span-2")}>
+          <li key={`${index}-${item.src}`} className={cn(index === 0 && "lg:col-span-2 lg:row-span-2")}>
             <figure className="flex h-full flex-col">
               <button
                 type="button"
-                onClick={() => open(item)}
+                onClick={(event) => open(item, event.currentTarget.querySelector("img")?.currentSrc)}
                 className="group border-stone/40 hover:border-stone relative block cursor-zoom-in overflow-hidden rounded-xl border transition-[color,background-color,border-color] duration-200"
               >
                 <Image
@@ -59,7 +65,7 @@ export function ScreenshotGallery({
                   sizes={index === 0 ? "(min-width: 1024px) 62vw, 100vw" : "(min-width: 1024px) 31vw, 100vw"}
                   className="h-auto w-full"
                 />
-                <span className="bg-basalt text-mist rounded-control absolute right-3 bottom-3 flex size-8 items-center justify-center opacity-80 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="bg-basalt text-mist ring-mist/70 rounded-control absolute right-3 bottom-3 flex size-8 items-center justify-center opacity-80 ring-1 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                   <ExpandIcon />
                 </span>
                 <span className="sr-only">{labels.viewLarger}</span>
@@ -89,21 +95,18 @@ export function ScreenshotGallery({
       >
         {current ? (
           <figure className="bg-mist rounded-xl p-2 sm:p-3">
-            {/* On a narrow screen the image stays larger than the screen and is moved sideways. */}
-            <div className="border-stone/40 overflow-x-auto rounded-lg border">
-              <Image
-                src={current.src}
-                alt={current.description}
-                width={current.width}
-                height={current.height}
-                sizes="(min-width: 1024px) 100vw, 48rem"
-                className="h-auto w-full max-w-none min-w-[44rem] lg:min-w-0"
-              />
-            </div>
+            {/* The whole screenshot, within the screen at every width. */}
+            <Image
+              src={current.src}
+              alt={current.description}
+              width={current.width}
+              height={current.height}
+              sizes="100vw"
+              style={preview ? { backgroundImage: `url("${preview}")`, backgroundSize: "100% 100%" } : undefined}
+              className="border-stone/40 h-auto w-full rounded-lg border"
+            />
             <div className="flex items-center justify-between gap-4 px-1 pt-2 sm:pt-3">
-              <figcaption className="text-ocean text-sm">
-                {current.caption} <span className="lg:hidden">{labels.panHint}</span>
-              </figcaption>
+              <figcaption className="text-ocean text-sm">{current.caption}</figcaption>
               <form method="dialog">
                 <button
                   ref={closeButton}

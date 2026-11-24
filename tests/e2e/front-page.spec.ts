@@ -29,12 +29,11 @@ test.describe("introduction and mission", () => {
     });
   }
 
-  test("on a desktop screen the first screen ends on the ocean, as on board B", async ({ page }) => {
+  test("on a desktop screen the first screen is as tall as the screen", async ({ page }) => {
     for (const viewport of [{ width: 1440, height: 900 }, { width: 1440, height: 960 }, { width: 1920, height: 1080 }]) {
       await page.setViewportSize(viewport);
       await page.goto("/");
       const first = (await page.locator("main section").first().boundingBox())!;
-      // The ocean is the lowest fifth of the landscape: it is in view.
       expect(first.height).toBeLessThanOrEqual(viewport.height + 8);
       const card = page.locator("main section").first().locator("article");
       expect(await isInViewport(card)).toBe(true);
@@ -103,6 +102,28 @@ test.describe("two calls to action", () => {
       await expect(page).toHaveURL("/community");
     });
   }
+
+  test("Install moves to the projects every time, also when the address already ends there", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await gotoReady(page, "/");
+    const heading = page.getByRole("heading", { name: "Five projects" });
+    const first = page.locator("main section").first().getByRole("link", { name: "Install" });
+    await first.click();
+    await expect(page).toHaveURL("/#projects");
+    await expect.poll(() => isInViewport(heading)).toBe(true);
+    // Back to the top, and again: the address has not changed, the page still moves.
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await first.click();
+    await expect.poll(() => isInViewport(heading)).toBe(true);
+    // From the end of the page, and from the navigation.
+    for (const again of [page.locator("main > section").last().getByRole("link", { name: "Install" }), page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Install" })]) {
+      await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+      await again.click();
+      await expect.poll(() => isInViewport(heading)).toBe(true);
+    }
+    // The focus has moved with it, so that the keyboard goes on from the projects.
+    expect(await page.evaluate(() => document.activeElement?.id)).toBe("projects");
+  });
 
   test("the two calls to action come again at the end of the page", async ({ page }) => {
     await page.goto("/");

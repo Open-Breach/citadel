@@ -38,7 +38,7 @@ export function LatestReleases({
             <li key={`${release.project}-${release.version}`} className="border-stone/40 border-t">
               <a
                 href={release.url}
-                className="lead-on hover:bg-white/70 -mx-3 grid grid-cols-[1fr_auto_auto] items-center gap-x-5 rounded-sm px-3 py-4 transition-[color,background-color,border-color] duration-150 sm:grid-cols-[1fr_5rem_7rem_auto]"
+                className="lead-on hover:bg-white/70 -mx-3 grid grid-cols-[1fr_auto_auto] items-center gap-x-5 rounded-sm px-3 py-4 transition-[color,background-color,border-color] duration-150 sm:grid-cols-[minmax(0,14rem)_6rem_8rem_1fr]"
               >
                 <span className="text-basalt font-medium">{nameOf(release.project)}</span>
                 <span className="text-basalt font-mono text-sm">v{release.version}</span>
@@ -48,7 +48,7 @@ export function LatestReleases({
                 >
                   {formatDay(release.date)}
                 </time>
-                <ArrowOutIcon className="text-amber-deep lead-on-arrow" />
+                <ArrowOutIcon className="text-amber-deep lead-on-arrow justify-self-end" />
               </a>
             </li>
           ))}

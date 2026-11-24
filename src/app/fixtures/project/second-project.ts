@@ -22,7 +22,7 @@ export const secondProject: Project = {
       { image: "rickFrame", caption: draft("The first stand-in.") },
       { image: "rickDark", caption: draft("The second stand-in.") },
       { image: "rickLight", caption: draft("The third stand-in.") },
-      { image: "landscape", caption: draft("The fourth stand-in.") },
+      { image: "rickFrame", caption: draft("The fourth stand-in.") },
     ],
     features: [
       { name: draft("One"), description: draft("The first feature.") },

@@ -10,7 +10,7 @@ export function Why({ page }: { page: ProjectPage }) {
     <section
       id="why"
       aria-labelledby="why-heading"
-      className="from-haze to-mist bg-linear-to-b to-[14rem] py-20 lg:py-32"
+      className="py-20 lg:py-32"
     >
       <Container className="grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12">
         <h2 id="why-heading" className="text-basalt text-xl font-semibold tracking-[-0.01em] lg:pt-2 lg:col-span-4">

@@ -1,8 +1,8 @@
-import Link from "next/link";
+import { SectionLink } from "@/components/ui/section-link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type Variant = "filled" | "solid" | "outlined";
+type Variant = "filled" | "solid" | "outlined" | "outlined-light";
 type Size = "md" | "sm";
 
 /** The classes of a call to action, for elements that are not links. */
@@ -16,6 +16,8 @@ export function buttonClasses(variant: Variant = "filled", size: Size = "md", cl
     variant === "solid" && "bg-basalt text-mist hover:bg-ocean active:bg-ocean",
     variant === "outlined" &&
       "border-basalt text-basalt hover:bg-basalt hover:text-mist active:bg-ocean active:text-mist border",
+    variant === "outlined-light" &&
+      "border-mist text-mist hover:bg-mist hover:text-basalt active:bg-fog active:text-basalt border",
     className,
   );
 }
@@ -23,7 +25,8 @@ export function buttonClasses(variant: Variant = "filled", size: Size = "md", cl
 /**
  * A call to action. Filled amber is Install, the prominent one, and nothing
  * else. Solid Basalt is the first action of a place where that action is
- * not Install. Outlined is the second action.
+ * not Install. Outlined is the second action, and outlined-light is the
+ * same over the dark rock of a photograph.
  * A target on this site becomes a client-side link; any other target is a
  * plain link that the visitor follows.
  */
@@ -41,11 +44,11 @@ export function Button({
   children: ReactNode;
 }) {
   const classes = buttonClasses(variant, size, className);
-  if (href.startsWith("/")) {
+  if (href.startsWith("/") || href.startsWith("#")) {
     return (
-      <Link href={href} className={classes}>
+      <SectionLink href={href} className={classes}>
         {children}
-      </Link>
+      </SectionLink>
     );
   }
   return (
