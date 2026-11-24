@@ -54,8 +54,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files: the vault's name and the certificates' names live in .env.local
+# and never in this repository. .env.example lists the variables, without a
+# value.
 .env*
+!.env.example
+
+# the certificates and private keys that a start downloads from the vault
+/.certs/
+# the certificates the browser tests make for themselves
+/.certs-e2e/
 
 # vercel
 .vercel

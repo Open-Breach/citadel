@@ -5,6 +5,8 @@ import { notFound } from "@/content/site";
 export const metadata: Metadata = {
   title: "Page not found",
   description: notFound.text.text,
+  // An address that is no page has no canonical address.
+  alternates: { canonical: null },
 };
 
 export default function NotFound() {

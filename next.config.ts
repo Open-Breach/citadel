@@ -8,7 +8,19 @@ import type { NextConfig } from "next";
  */
 const forTests = process.env.CITADEL_FIXTURES === "1";
 
+/*
+ * The site's main address, under which every page names its canonical
+ * address (src/app/layout.tsx). It is read here, when the site is built, and
+ * becomes part of the pages. scripts/serve.mjs says so at start when its
+ * environment names another one.
+ */
+const mainAddress = new URL(process.env.PUBLIC_BASE_URL?.trim() || "https://openbreach.dev").origin;
+
 const nextConfig: NextConfig = {
+  env: { PUBLIC_BASE_URL: mainAddress },
+  // The container image copies .next/standalone and serves it through
+  // scripts/serve.mjs, which mounts it on an HTTPS server.
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   distDir: forTests ? ".next-e2e" : ".next",

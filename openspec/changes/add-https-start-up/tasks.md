@@ -15,29 +15,29 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 
 ## 2. Certificate download
 
-- [ ] 2.1 Port `dotenv.mjs` and `fetch-cert.mjs` from the portal (design D2, D3) with every flowcpt name removed, and add the Azure packages and node-forge; verify with Node tests that a PEM secret is split into key and chain and that a PKCS#12 secret made by the test is converted with the leaf first
-- [ ] 2.2 Extend the download to the list in `KEYVAULT_CERTIFICATES`, one folder per certificate under `CERT_DIR` (design D4), failing the whole start when one cannot be read; verify with Node tests against a vault that is an object in the test: all downloaded, one missing name stops with an error that names it, no key material in the log
-- [ ] 2.3 Write the key files with owner-only access and make sure `.certs/` and `.env*` are ignored by git while `.env.example` is not; verify with a Node test on the file modes and with `git check-ignore`
-- [ ] 2.4 Add the committed `.env.example` with every variable of design D12 commented out and no real value; verify it contains no vault name and no certificate name
+- [x] 2.1 Port `dotenv.mjs` and `fetch-cert.mjs` from the portal (design D2, D3) with every flowcpt name removed, and add the Azure packages and node-forge; verify with Node tests that a PEM secret is split into key and chain and that a PKCS#12 secret made by the test is converted with the leaf first
+- [x] 2.2 Extend the download to the list in `KEYVAULT_CERTIFICATES`, one folder per certificate under `CERT_DIR` (design D4), failing the whole start when one cannot be read; verify with Node tests against a vault that is an object in the test: all downloaded, one missing name stops with an error that names it, no key material in the log
+- [x] 2.3 Write the key files with owner-only access and make sure `.certs/` and `.env*` are ignored by git while `.env.example` is not; verify with a Node test on the file modes and with `git check-ignore`
+- [x] 2.4 Add the committed `.env.example` with every variable of design D12 commented out and no real value; verify it contains no vault name and no certificate name
 
 ## 3. Choosing the certificate
 
-- [ ] 3.1 Implement reading the DNS names off a leaf certificate and the choice for a host name as a pure function (design D5); verify with Node tests every scenario of "The certificate matches the host name asked for" in the `tls-certificates` spec
-- [ ] 3.2 Log each certificate with its version, expiry date and names at start; verify the log lines in a Node test and that they hold no key material
+- [x] 3.1 Implement reading the DNS names off a leaf certificate and the choice for a host name as a pure function (design D5); verify with Node tests every scenario of "The certificate matches the host name asked for" in the `tls-certificates` spec
+- [x] 3.2 Log each certificate with its version, expiry date and names at start; verify the log lines in a Node test and that they hold no key material
 
 ## 4. Listeners
 
-- [ ] 4.1 Port `listen.mjs` and its tests (design D9); verify the ported tests pass
-- [ ] 4.2 Implement the redirect handler as a pure function of method, Host header and URL (design D7); verify with Node tests every scenario of "Plain HTTP only redirects" in the `http-serving` spec, including a Host header with a port, an invalid host name and `PUBLIC_HTTPS_PORT` set to 14443
-- [ ] 4.3 Set `output: "standalone"` and port `serve.mjs`: the certificates, the HTTPS server with the certificate choice, Next.js's request handler on it, the HTTP listener beside it, and the stop on a signal (design D6); verify `npm run build` followed by `npm start` answers over HTTPS with a certificate pair in `CERT_DIR`
-- [ ] 4.4 Write the integration test of design D14: two generated certificates for two names, the production start on free ports; verify it checks the certificate presented for each name and for an unknown name, a page and a static file over HTTPS, the redirect over HTTP, every host name getting the same page, and exit status 0 on the termination signal
-- [ ] 4.5 Add the health path of design D16; verify in the integration test that `/healthz` answers 200 over HTTPS and is redirected over plain HTTP
+- [x] 4.1 Port `listen.mjs` and its tests (design D9); verify the ported tests pass
+- [x] 4.2 Implement the redirect handler as a pure function of method, Host header and URL (design D7); verify with Node tests every scenario of "Plain HTTP only redirects" in the `http-serving` spec, including a Host header with a port, an invalid host name and `PUBLIC_HTTPS_PORT` set to 14443
+- [x] 4.3 Set `output: "standalone"` and port `serve.mjs`: the certificates, the HTTPS server with the certificate choice, Next.js's request handler on it, the HTTP listener beside it, and the stop on a signal (design D6); verify `npm run build` followed by `npm start` answers over HTTPS with a certificate pair in `CERT_DIR`
+- [x] 4.4 Write the integration test of design D14: two generated certificates for two names, the production start on free ports; verify it checks the certificate presented for each name and for an unknown name, a page and a static file over HTTPS, the redirect over HTTP, every host name getting the same page, and exit status 0 on the termination signal
+- [x] 4.5 Add the health path of design D16; verify in the integration test that `/healthz` answers 200 over HTTPS and is redirected over plain HTTP
 
 ## 5. Local development
 
-- [ ] 5.1 Port `dev.mjs` with `DEV_HOST` and `DEV_PORT` and no plain HTTP start (design D11), and point the `dev` and `start` scripts in `package.json` at the two scripts; verify that with no vault named `npm run dev` ends with a message that names the missing settings and `.env.local`
-- [ ] 5.2 Point the Playwright run at the production start over HTTPS with generated certificates; verify `npm run test:e2e` passes with every test of rounds one and two unchanged
-- [ ] 5.3 Add the canonical address from `PUBLIC_BASE_URL` to every page; verify with Playwright both scenarios of "Canonical address" in the `site-shell` delta
+- [x] 5.1 Port `dev.mjs` with `DEV_HOST` and `DEV_PORT` and no plain HTTP start (design D11), and point the `dev` and `start` scripts in `package.json` at the two scripts; verify that with no vault named `npm run dev` ends with a message that names the missing settings and `.env.local`
+- [x] 5.2 Point the Playwright run at the production start over HTTPS with generated certificates; verify `npm run test:e2e` passes with every test of rounds one and two unchanged
+- [x] 5.3 Add the canonical address from `PUBLIC_BASE_URL` to every page; verify with Playwright both scenarios of "Canonical address" in the `site-shell` delta
 - [ ] 5.4 Rewrite the README's setup for HTTPS: the four things a local start needs, the variables of design D12, how a certificate is rolled over; verify by following it on a machine with an Azure login, or say in the report that nobody has
 
 ## 6. Container image
