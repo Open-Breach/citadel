@@ -4,7 +4,9 @@
 
 See `proposal.md` for why the site serves HTTPS itself and why this change waits.
 
-In this document **decided** marks a decision of Serge's from 2026-11-22, and **proposed** marks what was added while writing this change and still waits for his yes.
+In this document **decided** marks a decision of Serge's from 2026-11-22, or from 2026-11-24 where that date is given, and **proposed** marks what was added while writing this change and still waits for his yes.
+
+On 2026-11-24 Serge gave the go for this change, and decided three things that day: the certificate for openbreach.dev is in the vault and production starts with it; the site goes public as built; the image is published to his own registry and he puts it on his cluster himself.
 
 The mechanism exists already in two other projects of Serge's, both in the private repository `FlairFindr/flow-captain`:
 
@@ -22,12 +24,14 @@ A trial port of the portal's single-certificate start-up was run on 2026-11-22 a
 - The same site, served over HTTPS by the site itself, locally, in staging and in production.
 - One image and one start script for every environment; an environment differs only in its configuration.
 - No vault name, certificate name, certificate or key in this repository.
+- An image in Serge's registry after every push to `main`, ready to be put on his cluster.
 
 **Non-Goals:**
 
 - Issuing and renewing certificates.
 - Watching the vault. A renewed certificate is picked up at the next start.
-- The deployment and its manifests, and a build workflow.
+- The deployment and its manifests.
+- A note that the site is unfinished, and keeping search engines out.
 - Redirects between host names.
 
 ## Decisions
@@ -70,6 +74,7 @@ New in Citadel, because the portal has one certificate and no plain HTTP listene
 ### D4. Several certificates
 
 - **Decided:** a wildcard certificate per domain, picked by the host name the client asks for, as the hosting service does. Production has five: for `openbreach.dev`, `open-breach.com`, `open-breach.dev`, `openbreach.net` and `open-breach.org`. Staging and a local start have one, for `openbreach.dev`.
+- **Decided on 2026-11-24:** production starts with the one certificate that exists, for `openbreach.dev`. The four other domains join when their certificates exist, by adding their names to `KEYVAULT_CERTIFICATES`. Nothing in the code changes then.
 - **Proposed:** `KEYVAULT_CERTIFICATES` holds the names of the certificates in the vault, separated by commas. The first is the default. It replaces the portal's `KEYVAULT_CERTIFICATE`. Each certificate is written to a folder of its own, `CERT_DIR/<name>/`.
 
 Every certificate must carry its bare domain next to the wildcard. `*.openbreach.dev` covers `www`, `web-stg` and `local`, and does not cover `openbreach.dev` itself, which is where production lives. The same holds for the four other domains.
@@ -107,6 +112,7 @@ Ports: 3000 for HTTPS and 3080 for HTTP in the container, neither of which needs
 
 - **Decided:** the site accepts every host name and answers the same under each. There are no redirects between names. Next.js does not check the host, so this needs no code.
 - **Proposed:** every page names the main address as its canonical address (the `site-shell` delta), so that search engines count the names as one site. The main address comes from `PUBLIC_BASE_URL`. Which name is the main one is an open question; `https://openbreach.dev` is assumed.
+- **Decided on 2026-11-24:** the site goes public as built. No note says that it is unfinished, and nothing asks search engines to stay out.
 
 A client that asks for a name no certificate covers gets the default certificate and a warning from its browser. That is the correct outcome for a name that was never set up.
 
@@ -124,6 +130,12 @@ A multi-stage build on `node:22-alpine`:
 4. **Runtime:** a user that is not root, the standalone output, the static files, `public`, the start scripts and their modules. `CERT_DIR` is `/app/.certs`. `HOSTNAME` is not set. The command is `node scripts/serve.mjs`.
 
 **Proposed:** the image builds on amd64 and on arm64, as the portal's does.
+
+Added for the photographs of round two (proposed):
+
+- The site resizes its photographs when they are asked for. The image carries what Next.js needs for that on its platform, and `public/images/` with the four photographs.
+- Resized pictures are kept in a cache folder inside the container. The run user owns it. Beside the certificate folder it is the only place the container writes to, so that it also runs with a read-only root file system and those two folders writable.
+- The cache is empty after every start. The first request for a size after a start therefore takes longer than the ones after it.
 
 ### D11. Local development
 
@@ -165,6 +177,38 @@ The vault's name and the certificates' names are in `.env.local` and in the depl
 - **Integration test, no vault:** the test generates two certificates for two names, puts them where the start script reads them, starts the production start on free ports, and checks which certificate is presented for each name, the pages over HTTPS, the redirect over HTTP, and the stop on a signal.
 - **With the real vault:** once, by hand, on a machine with an Azure login. It is the last group of the task list.
 
+### D15. Publishing the image
+
+- **Decided on 2026-11-24:** the image is published to Serge's own registry, and he puts it on his cluster himself.
+- **Proposed:** a workflow under `.github/workflows/` publishes it.
+  - It runs on every push to `main` and when it is started by hand. On a pull request it runs the checks and builds the image for both platforms without publishing, so that a broken image shows before the merge.
+  - It first runs the project's checks: build, lint, type check, unit tests and browser tests.
+  - It builds for `linux/amd64` and for `linux/arm64`, each on a runner of its own kind, and joins the two under one name.
+  - It publishes two tags: one made from the commit, which never moves, and `main`, which moves. The summary of the run shows the full name with its digest. A deployment names the commit tag or the digest.
+  - `APP_VERSION` is the version in `package.json` with the short commit added.
+  - The registry's address and the image's name are one repository variable, `REGISTRY_IMAGE`. The login is two repository secrets, `REGISTRY_USERNAME` and `REGISTRY_PASSWORD`. Serge sets all three. None of them is in the repository, in a log or in the image.
+  - A run that finds the variable or the secrets missing builds, does not publish, and says so. That is also what a fork gets.
+  - Actions written by others are pinned to a commit.
+  - The workflow does not deploy.
+
+The registry has to be reachable from the runner. If it cannot be reached from GitHub's own runners, the publishing job needs a runner of Serge's. Say so and stop; do not work around it.
+
+### D16. Health path (proposed)
+
+`GET /healthz` over HTTPS answers 200 with a short text. It renders no page and does not reach the vault. A cluster uses it for its probes, with the HTTPS scheme on port 3000. The plain HTTP listener redirects it like every other path. No page links to it.
+
+### D17. What a deployment supplies (proposed)
+
+The manifests are Serge's and are not in this repository. The README lists what they have to supply:
+
+- The image, by its commit tag or its digest.
+- `KEYVAULT_URL`, `KEYVAULT_CERTIFICATES` and `PUBLIC_BASE_URL`.
+- An identity for the pod that may read the certificates and their secrets.
+- A service that maps 443 to 3000 and 80 to 3080.
+- Probes on `/healthz` with the HTTPS scheme on port 3000.
+- Two places the container may write to: the certificate folder and the picture cache.
+- A restart after a certificate was renewed. How is still open.
+
 ## Trial
 
 On 2026-11-22 the portal's scripts, ported for one certificate, were run with Next.js 16.4.6 and a self-signed pair in `CERT_DIR`:
@@ -187,16 +231,22 @@ Not covered by the trial: the download from a real vault, the image build, sever
 - [A renewed certificate is served only after a restart] → Something outside this repository has to restart the pods after a renewal, or on a schedule shorter than the renewal window. It is an open question for the deployment.
 - [The site depends on the vault at every start] → A pod that restarts while the vault is unreachable does not come up. The same holds for the portal today.
 - [Three of the alias domains are outside `.dev`, so a browser may try plain HTTP first] → The HTTP listener redirects them.
+- [The first request for each size of a photograph after a start is slow, and turning a large picture into AVIF takes much processor time and memory for a moment] → The task list measures the first request for the first screen's photograph in the container, and the report gives the time and the memory, so that Serge can size the pod. If it is too slow in use, a later change fills the cache at start.
+- [The registry may not be reachable from GitHub's runners] → D15: say so and stop.
+- [The site goes public with sample data and draft texts, and search engines may list it that way] → Decided on 2026-11-24. The "Sample data" note of round two stays where data is not real, and the report of this round lists what a visitor sees that is not final.
 
 ## Migration Plan
 
-Before the change is applied, Serge confirms:
+Where the prerequisites stand on 2026-11-24:
 
-1. The certificates are in the vault, each with its bare domain and its wildcard. The domains' DNS is at Cloudflare and a wildcard is validated through DNS, so the certificate job needs to be able to write records there.
-2. `local.openbreach.dev` resolves to 127.0.0.1.
-3. A developer account, and later the pod's identity, may read the certificates and their secrets.
+1. The certificate for openbreach.dev is in the vault, says Serge. The task list checks that it carries the bare domain next to the wildcard.
+2. `local.openbreach.dev` resolving to 127.0.0.1 is not confirmed. The task list checks it.
+3. A developer account that may read the certificate and its secret is needed for the last task group. The pod's identity belongs to the deployment.
+4. The repository variable and the two secrets of D15 are Serge's to set. Until they are set, the workflow builds and does not publish.
 
-Then the tasks run in order. The plain HTTP dev start of round one ends with this change; going back is going back to the commit before it.
+Then the tasks run in order. The plain HTTP dev start of rounds one and two ends with this change; going back is going back to the commit before it.
+
+After the merge, the run on `main` publishes the image, and Serge puts it on his cluster with the configuration of D17.
 
 ## Open Questions
 
@@ -206,6 +256,7 @@ None of these changes the code of this change; each is a value or lies outside t
 - **Ports.** 14443 and 14080 locally, 3000 and 3080 in the container, are proposals.
 - **Main address.** Which of the names is the main one.
 - **Working without the vault.** Whether `npm run dev` may take a key and certificate that someone puts into `CERT_DIR` themselves, as the production start does, or whether the vault is the only way.
-- **Hosting.** Which cluster and namespace for production and for staging, each with a public address of its own.
-- **Build and deploy.** A workflow in this repository that builds the image and hands it to the deployment. The portal's workflow is in a private repository, and a public repository cannot call a reusable workflow from a private one.
+- **Hosting.** Which cluster and namespace for production and for staging, each with a public address of its own. They are Serge's.
+- **Deploying.** The workflow publishes the image and stops there. Putting a new image on the cluster is done by hand for now.
+- **The vault from where the agent works.** The first and the last task group need an Azure login. Where the agent has none, Serge runs those steps.
 - **Restart after a renewal.** What restarts the pods once the certificate job has renewed a certificate.

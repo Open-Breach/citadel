@@ -76,3 +76,14 @@ On a termination signal the production start SHALL stop accepting connections, l
 #### Scenario: A request in progress
 - **WHEN** the process receives the termination signal while it answers a request that finishes within five seconds
 - **THEN** that request is answered before the process exits
+
+### Requirement: Health path
+The site SHALL answer `GET /healthz` over HTTPS with the status 200 and a short text, without rendering a page and without reaching the vault. Over plain HTTP the path SHALL be redirected like every other path.
+
+#### Scenario: Probe
+- **WHEN** a cluster requests `/healthz` over HTTPS on the HTTPS port, without checking the name on the certificate
+- **THEN** the answer has the status 200
+
+#### Scenario: Over plain HTTP
+- **WHEN** `/healthz` is requested over plain HTTP
+- **THEN** the answer is the redirect to HTTPS
