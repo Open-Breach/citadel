@@ -3,11 +3,16 @@
 #
 # The registry is named in the repository's settings and nowhere else:
 #
-#   variable  REGISTRY_IMAGE     the registry's address and the image's name
+#   secret    REGISTRY_IMAGE     the registry's address and the image's name
 #   secret    REGISTRY_USERNAME  the login
 #   secret    REGISTRY_PASSWORD
 #   variable  PUBLIC_BASE_URL    optional: the site's main address, when it is
 #                                not the default of next.config.ts
+#
+# REGISTRY_IMAGE may be a variable instead of a secret. GitHub keeps a secret
+# out of every log by itself. It prints a variable in the log of the step
+# that reads it first, before this workflow can mask it, and this repository's
+# logs are public.
 #
 # Where one of the first three is missing, as in a fork, the image is built
 # and checked and nothing is published. The same holds for a pull request and
@@ -86,24 +91,30 @@ jobs:
       - name: Decide whether this run publishes
         id: decide
         env:
-          REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE }}
-          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          # Only whether each is set. Their values do not come into this job.
+          HAS_IMAGE: ${{ (secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE) != '' }}
+          HAS_USERNAME: ${{ secrets.REGISTRY_USERNAME != '' }}
+          HAS_PASSWORD: ${{ secrets.REGISTRY_PASSWORD != '' }}
         run: |
+          missing=""
+          [ "$HAS_IMAGE" = "true" ] || missing="${missing} REGISTRY_IMAGE,"
+          [ "$HAS_USERNAME" = "true" ] || missing="${missing} REGISTRY_USERNAME,"
+          [ "$HAS_PASSWORD" = "true" ] || missing="${missing} REGISTRY_PASSWORD,"
+          if [ -n "$missing" ]; then
+            registry="the registry is not configured in the repository's settings: missing${missing%,}"
+          else
+            registry="the registry is configured"
+          fi
+
           reason=""
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            reason="a pull request builds and checks the image and publishes nothing"
+            reason="a pull request builds and checks the image and publishes nothing (${registry})"
           elif [ "$GITHUB_REF" != "refs/heads/main" ]; then
-            reason="only a run on main publishes, and this one runs on ${GITHUB_REF_NAME}"
-          else
-            missing=""
-            [ -n "$REGISTRY_IMAGE" ] || missing="${missing} the variable REGISTRY_IMAGE,"
-            [ -n "$REGISTRY_USERNAME" ] || missing="${missing} the secret REGISTRY_USERNAME,"
-            [ -n "$REGISTRY_PASSWORD" ] || missing="${missing} the secret REGISTRY_PASSWORD,"
-            if [ -n "$missing" ]; then
-              reason="the registry is not configured in the repository's settings: missing${missing%,}"
-            fi
+            reason="only a run on main publishes, and this one runs on ${GITHUB_REF_NAME} (${registry})"
+          elif [ -n "$missing" ]; then
+            reason="$registry"
           fi
+
           if [ -z "$reason" ]; then
             echo "publish=true" >> "$GITHUB_OUTPUT"
             echo "This run publishes the image when its checks have passed."
@@ -163,11 +174,11 @@ jobs:
       - name: Publish the image for this platform
         if: needs.plan.outputs.publish == 'true'
         env:
-          REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE }}
+          REGISTRY_IMAGE: ${{ secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
-          # The registry's address stays out of the log, like the login.
+          # The registry's address stays out of the rest of the log, also where it is a variable.
           registry="${REGISTRY_IMAGE%%/*}"
           echo "::add-mask::${REGISTRY_IMAGE}"
           echo "::add-mask::${registry}"
@@ -186,7 +197,7 @@ jobs:
       - name: Log out of the registry
         if: always() && needs.plan.outputs.publish == 'true'
         env:
-          REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE }}
+          REGISTRY_IMAGE: ${{ secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE }}
         run: |
           echo "::add-mask::${REGISTRY_IMAGE%%/*}"
           docker logout "${REGISTRY_IMAGE%%/*}"
@@ -213,7 +224,7 @@ jobs:
           merge-multiple: true
       - name: Join the two platforms under the image's two tags
         env:
-          REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE }}
+          REGISTRY_IMAGE: ${{ secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
           COMMIT_TAG: ${{ needs.plan.outputs.tag }}
@@ -232,7 +243,7 @@ jobs:
             "${REGISTRY_IMAGE}@${amd64}" "${REGISTRY_IMAGE}@${arm64}"
           digest="$(docker buildx imagetools inspect "${REGISTRY_IMAGE}:${COMMIT_TAG}" --format '{{json .Manifest}}' | jq -r .digest)"
           docker logout "$registry"
-          # The summary names the image by the variable that holds its address:
+          # The summary names the image by the setting that holds its address:
           # this repository is public, and so is this page.
           {
             echo "### Image published"
@@ -245,5 +256,5 @@ jobs:
             echo "| Platforms | linux/amd64 \`${amd64}\`, linux/arm64 \`${arm64}\` |"
             echo "| Version | ${APP_VERSION} |"
             echo
-            echo "\`\$REGISTRY_IMAGE\` stands for the repository variable of that name. A deployment names the commit's tag or the digest."
+            echo "\`\$REGISTRY_IMAGE\` stands for the repository's setting of that name. A deployment names the commit's tag or the digest."
           } >> "$GITHUB_STEP_SUMMARY"

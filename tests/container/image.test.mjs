@@ -9,9 +9,10 @@
 // on a machine of that platform.
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { chmodSync, mkdtempSync, rmSync } from "node:fs";
+import { appendFileSync, chmodSync, mkdtempSync, rmSync } from "node:fs";
 import http from "node:http";
 import https from "node:https";
+import net from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, before, test } from "node:test";
@@ -74,7 +75,8 @@ function ask({ port, path: target = "/", plain = false, host = "openbreach.dev",
         path: target,
         agent: false,
         headers: { host, ...headers },
-        ...(plain ? {} : { servername: host, rejectUnauthorized: false }),
+        // A probe that asks for an address names no host in its TLS greeting.
+        ...(plain ? {} : { rejectUnauthorized: false, ...(net.isIP(host) ? {} : { servername: host }) }),
       },
       (response) => {
         const chunks = [];
@@ -144,7 +146,8 @@ test("the first screen's photograph for a 1440 screen at two device pixels per p
     `first AVIF request, 2880 wide, on ${process.arch}: ${Math.round(first.milliseconds)} ms, ` +
     `${Math.round(first.body.length / 1024)} KiB; peak memory of the site's process ${peak} MiB (${idle} MiB before)`;
   t.diagnostic(line);
-  console.log(line);
+  // In a workflow the numbers go onto the run's summary page.
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${line}\n\n`);
 });
 
 for (const [name, width, accept, type, format] of [

@@ -107,14 +107,14 @@ The workflow [image.yml](.github/workflows/image.yml) runs the checks, then buil
 
 ### How a published image is named
 
-The registry is named in the repository's settings and nowhere else: the variable `REGISTRY_IMAGE` holds the registry's address and the image's name, and the secrets `REGISTRY_USERNAME` and `REGISTRY_PASSWORD` hold the login. Where one of them is missing, as in a fork, the workflow builds, publishes nothing and says so.
+The registry is named in the repository's settings and nowhere else: `REGISTRY_IMAGE` holds the registry's address and the image's name, and `REGISTRY_USERNAME` and `REGISTRY_PASSWORD` hold the login. All three are best stored as secrets. `REGISTRY_IMAGE` may be a variable instead, but GitHub prints a variable in the log of the step that reads it first, and the logs of this repository are public; a secret stays out of every log. Where one of the three is missing, as in a fork, the workflow builds, publishes nothing and says so.
 
 A published image has two tags under the name in `REGISTRY_IMAGE`:
 
 - `sha-` followed by the first twelve characters of the commit, for example `sha-0123456789ab`. This tag never moves.
 - `main`, which moves with every push to `main`.
 
-The summary of the run shows the commit's tag and the digest of the image. A deployment names the commit's tag or the digest, never `main`. Inside the image, `APP_VERSION` is the version of `package.json` with the same twelve characters, and the first line of the site's log says it.
+The summary of the run shows the commit's tag and the digest of the image, and writes `$REGISTRY_IMAGE` where the registry's address would stand. A deployment names the commit's tag or the digest, never `main`. Inside the image, `APP_VERSION` is the version of `package.json` with the same twelve characters, and the first line of the site's log says it.
 
 The optional variable `PUBLIC_BASE_URL` sets the main address the image is built with, when it is not `https://openbreach.dev`.
 

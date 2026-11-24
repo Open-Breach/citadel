@@ -42,16 +42,16 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 
 ## 6. Container image
 
-- [ ] 6.1 Port the `Dockerfile` and add `.dockerignore` (design D10), with what the site needs to resize pictures; verify the image builds
-- [ ] 6.2 Start the image with a generated certificate pair mounted into its certificate folder; verify HTTPS on 3000, the redirect on 3080, `/healthz`, a user id that is not 0, and exit status 0 within five seconds of `docker stop`
-- [ ] 6.3 Ask the running container for the photograph of the first screen as AVIF and as WebP, in the width of a phone and of a 1440 screen at two device pixels per pixel; verify format and width of each answer and that the second request for the same one is answered from what the container kept. Write down the time and the peak memory of the first AVIF request for the report
-- [ ] 6.4 Start the image with a read-only root file system and its two folders writable; verify pages and photographs are served
-- [ ] 6.5 Inspect the image; verify it holds no certificate, no key, no name of a vault or certificate, and no address or login of a registry
-- [ ] 6.6 Build the image on arm64, or note in the pull request that no arm64 machine was at hand; verify the same checks as 6.2 and 6.3 where it was built
+- [x] 6.1 Port the `Dockerfile` and add `.dockerignore` (design D10), with what the site needs to resize pictures; verify the image builds
+- [x] 6.2 Start the image with a generated certificate pair mounted into its certificate folder; verify HTTPS on 3000, the redirect on 3080, `/healthz`, a user id that is not 0, and exit status 0 within five seconds of `docker stop`
+- [x] 6.3 Ask the running container for the photograph of the first screen as AVIF and as WebP, in the width of a phone and of a 1440 screen at two device pixels per pixel; verify format and width of each answer and that the second request for the same one is answered from what the container kept. Write down the time and the peak memory of the first AVIF request for the report
+- [x] 6.4 Start the image with a read-only root file system and its two folders writable; verify pages and photographs are served
+- [x] 6.5 Inspect the image; verify it holds no certificate, no key, no name of a vault or certificate, and no address or login of a registry
+- [x] 6.6 Build the image on arm64, or note in the pull request that no arm64 machine was at hand; verify the same checks as 6.2 and 6.3 where it was built
 
 ## 7. Publishing the image
 
-- [ ] 7.1 Write the workflow of design D15; verify on this round's pull request that the checks run and that the image is built for both platforms and not published
+- [x] 7.1 Write the workflow of design D15; verify on this round's pull request that the checks run and that the image is built for both platforms and not published
 - [ ] 7.2 Check the run of 7.1 where the registry is not configured; verify it ends without an error, says that nothing was published, and shows no secret in its log
 - [x] 7.3 Add to the README what a deployment supplies (design D17) and how a published image is named; verify the section names no vault, no certificate and no registry
 
@@ -59,7 +59,7 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 
 - [ ] 8.1 On a machine with an Azure login, run `npm run dev`; verify `https://local.openbreach.dev:14443` opens in a browser with no certificate warning
 - [ ] 8.2 On the same machine, run the production start with the certificate and send it a request for `openbreach.dev`, `www.openbreach.dev`, `web-stg.openbreach.dev` and `local.openbreach.dev`; verify each gets the certificate, the bare domain too
-- [ ] 8.3 Run every check; verify `npm run build`, `npm run lint`, `npm run typecheck`, `npm test` and `npm run test:e2e` pass
+- [x] 8.3 Run every check; verify `npm run build`, `npm run lint`, `npm run typecheck`, `npm test` and `npm run test:e2e` pass
 - [ ] 8.4 Open one pull request from the branch `round-three` and do not merge it; verify its text says what is built, every departure from a proposed point, which steps of groups 1 and 8 Serge still has to run, the numbers of 6.3, what `npm run placeholders` lists as not final, and every question for Serge
 
 ## Workflow follow-up
