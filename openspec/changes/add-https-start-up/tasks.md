@@ -38,7 +38,7 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 - [x] 5.1 Port `dev.mjs` with `DEV_HOST` and `DEV_PORT` and no plain HTTP start (design D11), and point the `dev` and `start` scripts in `package.json` at the two scripts; verify that with no vault named `npm run dev` ends with a message that names the missing settings and `.env.local`
 - [x] 5.2 Point the Playwright run at the production start over HTTPS with generated certificates; verify `npm run test:e2e` passes with every test of rounds one and two unchanged
 - [x] 5.3 Add the canonical address from `PUBLIC_BASE_URL` to every page; verify with Playwright both scenarios of "Canonical address" in the `site-shell` delta
-- [ ] 5.4 Rewrite the README's setup for HTTPS: the four things a local start needs, the variables of design D12, how a certificate is rolled over; verify by following it on a machine with an Azure login, or say in the report that nobody has
+- [x] 5.4 Rewrite the README's setup for HTTPS: the four things a local start needs, the variables of design D12, how a certificate is rolled over; verify by following it on a machine with an Azure login, or say in the report that nobody has
 
 ## 6. Container image
 
@@ -52,7 +52,7 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 ## 7. Publishing the image
 
 - [x] 7.1 Write the workflow of design D15; verify on this round's pull request that the checks run and that the image is built for both platforms and not published
-- [ ] 7.2 Check the run of 7.1 where the registry is not configured; verify it ends without an error, says that nothing was published, and shows no secret in its log
+- [x] 7.2 Check the run of 7.1 where the registry is not configured; verify it ends without an error, says that nothing was published, and shows no secret in its log
 - [x] 7.3 Add to the README what a deployment supplies (design D17) and how a published image is named; verify the section names no vault, no certificate and no registry
 
 ## 8. With the real vault
@@ -60,7 +60,7 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 - [ ] 8.1 On a machine with an Azure login, run `npm run dev`; verify `https://local.openbreach.dev:14443` opens in a browser with no certificate warning
 - [ ] 8.2 On the same machine, run the production start with the certificate and send it a request for `openbreach.dev`, `www.openbreach.dev`, `web-stg.openbreach.dev` and `local.openbreach.dev`; verify each gets the certificate, the bare domain too
 - [x] 8.3 Run every check; verify `npm run build`, `npm run lint`, `npm run typecheck`, `npm test` and `npm run test:e2e` pass
-- [ ] 8.4 Open one pull request from the branch `round-three` and do not merge it; verify its text says what is built, every departure from a proposed point, which steps of groups 1 and 8 Serge still has to run, the numbers of 6.3, what `npm run placeholders` lists as not final, and every question for Serge
+- [x] 8.4 Open one pull request from the branch `round-three` and do not merge it; verify its text says what is built, every departure from a proposed point, which steps of groups 1 and 8 Serge still has to run, the numbers of 6.3, what `npm run placeholders` lists as not final, and every question for Serge
 
 ## Workflow follow-up
 
