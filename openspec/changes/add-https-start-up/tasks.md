@@ -4,8 +4,8 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 
 ## 0. Before the round
 
-- [ ] 0.1 Archive `add-photographs` with the OpenSpec archive skill; verify `openspec/specs/` holds its requirements and `openspec validate --all --strict` passes
-- [ ] 0.2 Check that you can read the six script files and the Dockerfile of design D2, in the private repository or as files from Serge; verify by listing them. If you cannot, stop and ask Serge for them
+- [x] 0.1 Archive `add-photographs` with the OpenSpec archive skill; verify `openspec/specs/` holds its requirements and `openspec validate --all --strict` passes
+- [x] 0.2 Check that you can read the six script files and the Dockerfile of design D2, in the private repository or as files from Serge; verify by listing them. If you cannot, stop and ask Serge for them
 
 ## 1. Prerequisites
 
