@@ -43,6 +43,11 @@ if (Number.isNaN(keepAliveTimeout) || !Number.isFinite(keepAliveTimeout) || keep
   keepAliveTimeout = undefined;
 }
 
+// The image carries its version: package.json's with the short commit.
+if (process.env.APP_VERSION?.trim()) {
+  console.log(`serve: citadel ${process.env.APP_VERSION.trim()}`);
+}
+
 /** Ends a start that cannot go on. Nothing listens yet when this is called. */
 function fail(message) {
   console.error(`serve: not started: ${message}`);

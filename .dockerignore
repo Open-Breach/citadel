@@ -1,0 +1,25 @@
+# What the image is not built from. Above all: no environment file, no
+# certificate and no key ever enters the build.
+.env*
+.certs
+.certs-e2e
+*.pem
+
+node_modules
+.next
+.next-e2e
+test-results
+playwright-report
+tests
+
+.git
+.github
+.agents
+.claude
+.impeccable
+docs
+licenses
+openspec
+*.md
+Dockerfile
+.dockerignore

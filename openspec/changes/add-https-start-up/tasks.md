@@ -53,7 +53,7 @@ Serge gave the go on 24 November 2026: the certificate for openbreach.dev is in 
 
 - [ ] 7.1 Write the workflow of design D15; verify on this round's pull request that the checks run and that the image is built for both platforms and not published
 - [ ] 7.2 Check the run of 7.1 where the registry is not configured; verify it ends without an error, says that nothing was published, and shows no secret in its log
-- [ ] 7.3 Add to the README what a deployment supplies (design D17) and how a published image is named; verify the section names no vault, no certificate and no registry
+- [x] 7.3 Add to the README what a deployment supplies (design D17) and how a published image is named; verify the section names no vault, no certificate and no registry
 
 ## 8. With the real vault
 
