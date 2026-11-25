@@ -103,11 +103,11 @@ docker build -t citadel:test .
 npm run test:image
 ```
 
-The workflow [image.yml](.github/workflows/image.yml) runs the checks, then builds the image for `linux/amd64` and for `linux/arm64`, each on a machine of its own kind, and checks it there. On a push to `main` it then publishes the image. A pull request builds and checks and publishes nothing. The workflow does not deploy.
+The workflow [image.yml](.github/workflows/image.yml) runs the checks, then builds the image for `linux/amd64` and for `linux/arm64`, each on a machine of its own kind, and checks it there. Its jobs run on Depot runners. On a push to `main` it then publishes the image. A pull request builds and checks and publishes nothing. The workflow does not deploy.
 
 ### How a published image is named
 
-The registry is named in the repository's settings and nowhere else: `REGISTRY_IMAGE` holds the registry's address and the image's name, and `REGISTRY_USERNAME` and `REGISTRY_PASSWORD` hold the login. All three are best stored as secrets. `REGISTRY_IMAGE` may be a variable instead, but GitHub prints a variable in the log of the step that reads it first, and the logs of this repository are public; a secret stays out of every log. Where one of the three is missing, as in a fork, the workflow builds, publishes nothing and says so.
+The registry is named in the repository's settings and nowhere else: `REGISTRY_IMAGE` holds the registry's address and the image's name in one string, as in `address/name`, and `REGISTRY_USERNAME` and `REGISTRY_PASSWORD` hold the login. All three are best stored as secrets. `REGISTRY_IMAGE` may be a variable instead, but GitHub prints a variable in the log of the step that reads it first, and the logs of this repository are public; a secret stays out of every log. Where one of the three is missing, as in a fork, the workflow builds, publishes nothing and says so.
 
 A published image has two tags under the name in `REGISTRY_IMAGE`:
 
