@@ -3,18 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/serve.mjs",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --test \"tests/unit/**/*.test.ts\"",
+    "test": "node --test \"tests/unit/**/*.test.ts\" \"scripts/*.test.mjs\"",
+    "test:integration": "node --test \"tests/integration/*.test.mjs\"",
+    "test:image": "node --test \"tests/container/*.test.mjs\"",
     "test:e2e": "playwright test",
     "placeholders": "node scripts/placeholders.ts"
   },
   "dependencies": {
+    "@azure/identity": "^4.14.1",
+    "@azure/keyvault-certificates": "^4.11.0",
+    "@azure/keyvault-secrets": "^4.12.0",
     "geist": "^1.9.2",
     "next": "16.4.6",
+    "node-forge": "^1.4.4",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },

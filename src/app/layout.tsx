@@ -6,7 +6,19 @@ import { Navigation } from "@/components/shell/navigation";
 import { site, ui } from "@/content/site";
 import "./globals.css";
 
+/*
+ * The site answers under several host names, and every page names its own
+ * address under the main one as its canonical address, so that search
+ * engines count the names as one site.
+ *
+ * The main address is read when the site is built, not when it starts: the
+ * pages are built ahead of time, and their head is part of what is built.
+ * next.config.ts takes it from PUBLIC_BASE_URL.
+ */
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.PUBLIC_BASE_URL!),
+  // Relative to the page that is shown: each page names itself.
+  alternates: { canonical: "./" },
   title: {
     default: site.name,
     // Every other page names itself and Open-Breach.

@@ -1,0 +1,268 @@
+# Checks the site, builds its container image for both platforms and, on
+# `main`, publishes it to the configured registry.
+#
+# The registry is named in the repository's settings and nowhere else:
+#
+#   secret    REGISTRY_IMAGE     the registry's address and the image's name
+#   secret    REGISTRY_USERNAME  the login
+#   secret    REGISTRY_PASSWORD
+#   variable  PUBLIC_BASE_URL    optional: the site's main address, when it is
+#                                not the default of next.config.ts
+#
+# REGISTRY_IMAGE may be a variable instead of a secret. GitHub keeps a secret
+# out of every log by itself. It prints a variable in the log of the step
+# that reads it first, before this workflow can mask it, and this repository's
+# logs are public.
+#
+# Where one of the first three is missing, as in a fork, the image is built
+# and checked and nothing is published. The same holds for a pull request and
+# for a run started by hand on a branch other than `main`.
+#
+# Every job runs on a Depot runner.
+#
+# The workflow does not deploy.
+name: Image
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: image-${{ github.ref }}
+  # A newer push to a pull request replaces the run of the older one. A run
+  # on `main` is never cut off: it may be publishing.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: depot-ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+        env:
+          # The runner has IPv6: a listener test that cannot use it fails instead of being skipped.
+          REQUIRE_IPV6: "1"
+      - name: Integration test of the production start
+        run: npm run test:integration
+        env:
+          REQUIRE_IPV6: "1"
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+      - name: Browser tests
+        run: npm run test:e2e
+
+  plan:
+    name: Plan
+    runs-on: depot-ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      publish: ${{ steps.decide.outputs.publish }}
+      version: ${{ steps.name.outputs.version }}
+      tag: ${{ steps.name.outputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Name the build
+        id: name
+        env:
+          COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          short="${COMMIT::12}"
+          version="$(node -p 'require("./package.json").version')-${short}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=sha-${short}" >> "$GITHUB_OUTPUT"
+          echo "APP_VERSION is ${version}"
+      - name: Decide whether this run publishes
+        id: decide
+        env:
+          # Only whether each is set. Their values do not come into this job.
+          HAS_IMAGE: ${{ (secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE) != '' }}
+          # A registry's address alone is not enough: the image's name follows it after a slash.
+          IMAGE_HAS_NAME: ${{ contains(secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE, '/') }}
+          HAS_USERNAME: ${{ secrets.REGISTRY_USERNAME != '' }}
+          HAS_PASSWORD: ${{ secrets.REGISTRY_PASSWORD != '' }}
+        run: |
+          missing=""
+          if [ "$HAS_IMAGE" != "true" ]; then
+            missing="${missing} REGISTRY_IMAGE,"
+          elif [ "$IMAGE_HAS_NAME" != "true" ]; then
+            missing="${missing} the image's name after the registry's address in REGISTRY_IMAGE (address/name),"
+          fi
+          [ "$HAS_USERNAME" = "true" ] || missing="${missing} REGISTRY_USERNAME,"
+          [ "$HAS_PASSWORD" = "true" ] || missing="${missing} REGISTRY_PASSWORD,"
+          if [ -n "$missing" ]; then
+            registry="the registry is not configured in the repository's settings: missing${missing%,}"
+          else
+            registry="the registry is configured"
+          fi
+
+          reason=""
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            reason="a pull request builds and checks the image and publishes nothing (${registry})"
+          elif [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            reason="only a run on main publishes, and this one runs on ${GITHUB_REF_NAME} (${registry})"
+          elif [ -n "$missing" ]; then
+            reason="$registry"
+          fi
+
+          if [ -z "$reason" ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "This run publishes the image when its checks have passed."
+            echo "This run publishes the image when its checks have passed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Nothing is published::${reason}."
+            {
+              echo "### Nothing is published"
+              echo
+              echo "The image is built and checked for both platforms. It is not published: ${reason}."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  image:
+    name: Image for ${{ matrix.platform }}
+    needs: [checks, plan]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Each platform is built on a machine of its own kind. Nothing is emulated.
+          - platform: linux/amd64
+            arch: amd64
+            runner: depot-ubuntu-24.04
+          - platform: linux/arm64
+            arch: arm64
+            runner: depot-ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      PLATFORM: ${{ matrix.platform }}
+      APP_VERSION: ${{ needs.plan.outputs.version }}
+      PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - name: Build the image
+        run: |
+          docker buildx create --name citadel --driver docker-container --use
+          docker buildx build \
+            --platform "$PLATFORM" \
+            --build-arg APP_VERSION="$APP_VERSION" \
+            --build-arg PUBLIC_BASE_URL="$PUBLIC_BASE_URL" \
+            --provenance=false \
+            --load --tag citadel:test .
+      - name: Check the image where it was built
+        run: |
+          test "$(docker image inspect --format '{{.Os}}/{{.Architecture}}' citadel:test)" = "$PLATFORM"
+          npm ci
+          npm run test:image
+        env:
+          IMAGE: citadel:test
+      - name: Publish the image for this platform
+        if: needs.plan.outputs.publish == 'true'
+        env:
+          REGISTRY_IMAGE: ${{ secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          # The registry's address stays out of the rest of the log, also where it is a variable.
+          registry="${REGISTRY_IMAGE%%/*}"
+          echo "::add-mask::${REGISTRY_IMAGE}"
+          echo "::add-mask::${registry}"
+          printf '%s' "$REGISTRY_PASSWORD" | docker login "$registry" --username "$REGISTRY_USERNAME" --password-stdin
+          # The same build as above, from its cache, pushed under its digest alone.
+          docker buildx build \
+            --platform "$PLATFORM" \
+            --build-arg APP_VERSION="$APP_VERSION" \
+            --build-arg PUBLIC_BASE_URL="$PUBLIC_BASE_URL" \
+            --provenance=false \
+            --output "type=image,name=${REGISTRY_IMAGE},push-by-digest=true,name-canonical=true,push=true" \
+            --metadata-file "${RUNNER_TEMP}/metadata.json" .
+          mkdir -p "${RUNNER_TEMP}/digests"
+          jq -r '."containerimage.digest"' "${RUNNER_TEMP}/metadata.json" > "${RUNNER_TEMP}/digests/${{ matrix.arch }}"
+          grep -q '^sha256:[0-9a-f]\{64\}$' "${RUNNER_TEMP}/digests/${{ matrix.arch }}"
+      - name: Log out of the registry
+        if: always() && needs.plan.outputs.publish == 'true'
+        env:
+          REGISTRY_IMAGE: ${{ secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE }}
+        run: |
+          echo "::add-mask::${REGISTRY_IMAGE%%/*}"
+          docker logout "${REGISTRY_IMAGE%%/*}"
+      - name: Hand the digest to the publishing job
+        if: needs.plan.outputs.publish == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: digest-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    name: Publish
+    needs: [plan, image]
+    if: needs.plan.outputs.publish == 'true'
+    runs-on: depot-ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: digest-*
+          path: ${{ runner.temp }}/digests
+          merge-multiple: true
+      - name: Join the two platforms under the image's two tags
+        env:
+          REGISTRY_IMAGE: ${{ secrets.REGISTRY_IMAGE || vars.REGISTRY_IMAGE }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          COMMIT_TAG: ${{ needs.plan.outputs.tag }}
+          APP_VERSION: ${{ needs.plan.outputs.version }}
+        run: |
+          registry="${REGISTRY_IMAGE%%/*}"
+          echo "::add-mask::${REGISTRY_IMAGE}"
+          echo "::add-mask::${registry}"
+          amd64="$(cat "${RUNNER_TEMP}/digests/amd64")"
+          arm64="$(cat "${RUNNER_TEMP}/digests/arm64")"
+          printf '%s' "$REGISTRY_PASSWORD" | docker login "$registry" --username "$REGISTRY_USERNAME" --password-stdin
+          # One name for both platforms: the commit's tag, which never moves, and `main`, which does.
+          docker buildx imagetools create \
+            --tag "${REGISTRY_IMAGE}:${COMMIT_TAG}" \
+            --tag "${REGISTRY_IMAGE}:main" \
+            "${REGISTRY_IMAGE}@${amd64}" "${REGISTRY_IMAGE}@${arm64}"
+          digest="$(docker buildx imagetools inspect "${REGISTRY_IMAGE}:${COMMIT_TAG}" --format '{{json .Manifest}}' | jq -r .digest)"
+          docker logout "$registry"
+          # The summary names the image by the setting that holds its address:
+          # this repository is public, and so is this page.
+          {
+            echo "### Image published"
+            echo
+            echo "| | |"
+            echo "| --- | --- |"
+            echo "| Name | \`\$REGISTRY_IMAGE:${COMMIT_TAG}@${digest}\` |"
+            echo "| Tags | \`${COMMIT_TAG}\`, which never moves, and \`main\`, which moves |"
+            echo "| Digest | \`${digest}\` |"
+            echo "| Platforms | linux/amd64 \`${amd64}\`, linux/arm64 \`${arm64}\` |"
+            echo "| Version | ${APP_VERSION} |"
+            echo
+            echo "\`\$REGISTRY_IMAGE\` stands for the repository's setting of that name. A deployment names the commit's tag or the digest."
+          } >> "$GITHUB_STEP_SUMMARY"
